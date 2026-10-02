@@ -22,6 +22,7 @@
             background: #151515;
             padding: 30px;
             border-radius: 15px;
+            box-shadow: 0 0 25px #0055ff;
         }
 
         h1 {
@@ -53,6 +54,7 @@
         .message {
             margin-top: 15px;
             text-align: center;
+            word-break: break-word;
         }
     </style>
 </head>
@@ -63,11 +65,9 @@
     <h1>0MH Login</h1>
 
     <input id="username" type="text" placeholder="Username">
-
     <input id="password" type="password" placeholder="Password">
 
     <button onclick="login()">Login</button>
-
     <button onclick="register()">Create Account</button>
 
     <div class="message" id="message"></div>
@@ -75,38 +75,47 @@
 
 <script>
 async function login() {
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
     const message = document.getElementById("message");
+
+    message.textContent = "Logging in...";
 
     if (!username || !password) {
         message.textContent = "Please enter your username and password.";
         return;
     }
 
-    const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username,
-            password
-        })
-    });
+    try {
+        const response = await fetch("/api/login", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.success) {
-        message.textContent = "Login successful!";
-        window.location.href = "/";
-    } else {
-        message.textContent = data.message;
+        if (data.success) {
+            message.textContent = "Login successful!";
+            window.location.href = "/";
+        } else {
+            message.textContent = data.message || "Invalid username or password.";
+        }
+
+    } catch (error) {
+        console.error(error);
+        message.textContent = "Login request failed. Please try again.";
     }
 }
 
 async function register() {
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
     const message = document.getElementById("message");
 
@@ -115,20 +124,29 @@ async function register() {
         return;
     }
 
-    const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username,
-            password
-        })
-    });
+    try {
+        const response = await fetch("/api/register", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    message.textContent = data.message;
+        message.textContent =
+            data.message || "Registration completed.";
+
+    } catch (error) {
+        console.error(error);
+        message.textContent =
+            "Registration request failed. Please try again.";
+    }
 }
 </script>
 
