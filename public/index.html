@@ -13,91 +13,47 @@
 
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background:
-                radial-gradient(circle at top, #071b4d 0%, #020611 45%, #000000 100%);
+            background: #02040a;
             color: white;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
         }
 
         header {
             padding: 25px;
             text-align: center;
-            border-bottom: 1px solid #008cff;
-            box-shadow: 0 0 25px #008cff;
-            background: rgba(0, 10, 30, 0.8);
+            background: #050817;
+            border-bottom: 1px solid #0c00ff;
+            box-shadow: 0 0 25px #0c00ff;
         }
 
         header h1 {
             margin: 0;
-            color: #00aaff;
+            color: white;
             text-shadow:
-                0 0 5px #008cff,
-                0 0 15px #008cff,
-                0 0 30px #0066ff;
-        }
-
-        header p {
-            color: #b9eaff;
-            margin: 10px 0 20px;
-        }
-
-        .top-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        button,
-        .discord-button {
-            border: 1px solid #008cff;
-            background: #03142e;
-            color: #ffffff;
-            padding: 11px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.2s;
-            box-shadow:
-                0 0 8px rgba(0, 140, 255, 0.5),
-                inset 0 0 8px rgba(0, 140, 255, 0.15);
-        }
-
-        button:hover,
-        .discord-button:hover {
-            background: #06356e;
-            box-shadow:
-                0 0 10px #008cff,
-                0 0 25px #0066ff;
-            transform: translateY(-1px);
-        }
-
-        .hidden {
-            display: none !important;
+                0 0 5px #0c00ff,
+                0 0 15px #0c00ff,
+                0 0 30px #0c00ff;
         }
 
         .container {
-            width: min(1100px, 94%);
+            width: 90%;
+            max-width: 1100px;
             margin: 30px auto;
         }
 
         .panel {
-            background: rgba(2, 12, 30, 0.85);
-            border: 1px solid #0077ff;
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 25px;
-            box-shadow:
-                0 0 10px rgba(0, 119, 255, 0.5),
-                0 0 30px rgba(0, 60, 255, 0.15);
+            background: #050817;
+            border: 1px solid #0c00ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 18px rgba(12, 0, 255, 0.45);
         }
 
-        .panel h2 {
+        h2 {
             margin-top: 0;
-            color: #00aaff;
-            text-shadow: 0 0 12px #008cff;
+            color: white;
+            text-shadow: 0 0 10px #0c00ff;
         }
 
         input,
@@ -105,22 +61,19 @@
         select {
             width: 100%;
             padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: 1px solid #0077ff;
-            outline: none;
-            background: #020a18;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            background: #02040a;
             color: white;
-            box-shadow: inset 0 0 8px rgba(0, 119, 255, 0.15);
+            border: 1px solid #0c00ff;
+            border-radius: 8px;
+            outline: none;
         }
 
         input:focus,
         textarea:focus,
         select:focus {
-            border-color: #00aaff;
-            box-shadow:
-                0 0 8px #008cff,
-                inset 0 0 8px rgba(0, 140, 255, 0.2);
+            box-shadow: 0 0 12px #0c00ff;
         }
 
         textarea {
@@ -128,173 +81,116 @@
             resize: vertical;
         }
 
-        .message {
-            margin-top: 10px;
-            color: #8fd7ff;
+        button {
+            padding: 11px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #0c00ff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 12px #0c00ff;
         }
 
-        .error {
-            color: #ff6b6b;
+        button:hover {
+            box-shadow:
+                0 0 10px #0c00ff,
+                0 0 25px #0c00ff;
         }
 
-        .success {
-            color: #55ff9a;
+        .hidden {
+            display: none !important;
         }
 
         .categories {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 8px;
         }
 
-        .category {
-            flex: 1 1 130px;
-            min-width: 120px;
-        }
-
-        .category.active {
-            background: #0757a8;
-            box-shadow:
-                0 0 10px #008cff,
-                0 0 25px #0066ff;
-        }
-
-        #category-title {
-            color: #00aaff;
-            text-shadow: 0 0 12px #008cff;
-            margin-bottom: 20px;
+        .category-button {
+            flex: 1 1 140px;
         }
 
         .post {
-            background: rgba(1, 9, 23, 0.95);
-            border: 1px solid #006fff;
-            border-radius: 12px;
+            background: #02040a;
+            border: 1px solid #0c00ff;
+            border-radius: 10px;
             padding: 18px;
-            margin-bottom: 18px;
-            box-shadow:
-                0 0 8px rgba(0, 111, 255, 0.45);
+            margin-top: 15px;
+            box-shadow: 0 0 12px rgba(12, 0, 255, 0.35);
         }
 
         .post h3 {
             margin-top: 0;
-            color: #00aaff;
-            text-shadow: 0 0 8px #008cff;
+            color: white;
+            text-shadow: 0 0 8px #0c00ff;
         }
 
-        .post-category {
-            display: inline-block;
+        .post-meta {
+            color: #aaa;
             font-size: 13px;
-            color: #8fd7ff;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .post-text {
             white-space: pre-wrap;
-            color: #e7f6ff;
             line-height: 1.5;
         }
 
-        .post-file {
+        .file-box {
             margin-top: 15px;
+            padding: 12px;
+            border: 1px solid #0c00ff;
+            border-radius: 8px;
+            background: #050817;
         }
 
-        .post-file a {
-            color: #00aaff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .post-file a:hover {
-            text-decoration: underline;
-            text-shadow: 0 0 8px #008cff;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .edit-button {
-            border-color: #00aaff;
-        }
-
-        .delete-button {
-            border-color: #ff3d5a;
-            color: #ff8c9c;
-        }
-
-        .delete-button:hover {
-            background: #4a0b18;
-            box-shadow:
-                0 0 10px #ff3d5a,
-                0 0 20px #ff1744;
-        }
-
-        .user-info {
-            color: #9fdfff;
-            margin-bottom: 15px;
-        }
-
-        .file-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-
-        .file-button {
-            display: inline-block;
-            border: 1px solid #008cff;
-            background: #03142e;
+        .file-box a {
             color: white;
+            text-decoration: none;
+            text-shadow: 0 0 8px #0c00ff;
+        }
+
+        .file-box a:hover {
+            text-decoration: underline;
+        }
+
+        .select-file-wrapper {
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+        .select-file-button {
+            display: inline-block;
             padding: 11px 18px;
+            background: #0c00ff;
+            color: white;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
+            box-shadow: 0 0 12px #0c00ff;
+        }
+
+        .select-file-button:hover {
             box-shadow:
-                0 0 8px rgba(0, 140, 255, 0.5),
-                inset 0 0 8px rgba(0, 140, 255, 0.15);
+                0 0 10px #0c00ff,
+                0 0 25px #0c00ff;
         }
 
-        .file-button:hover {
-            background: #06356e;
-            box-shadow:
-                0 0 10px #008cff,
-                0 0 25px #0066ff;
+        #fileName {
+            display: inline-block;
+            margin-left: 10px;
+            color: #aaa;
         }
 
-        .file-name {
-            color: #9fdfff;
-            word-break: break-all;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: #6dbfff;
-            border-top: 1px solid #005eff;
-            margin-top: 50px;
-            box-shadow: 0 -5px 25px rgba(0, 100, 255, 0.15);
-        }
-
-        @media (max-width: 600px) {
-            header {
-                padding: 18px;
-            }
-
-            .panel {
-                padding: 16px;
-            }
-
-            .category {
-                flex: 1 1 100%;
-            }
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #050817;
+            border: 1px solid #0c00ff;
         }
     </style>
 </head>
@@ -303,572 +199,482 @@
 
 <header>
     <h1>0MH Website</h1>
-
-    <p>
-        Welcome to 0MH Website
-    </p>
-
-    <div class="top-buttons">
-        <a
-            class="discord-button"
-            href="https://discord.gg/sAAFCSPSH"
-            target="_blank"
-        >
-            Join our Discord
-        </a>
-
-        <button
-            id="staff-button"
-            class="hidden"
-            onclick="window.location.href='/staff'"
-        >
-            Owner & Admin Powers
-        </button>
-
-        <button
-            id="logout-button"
-            class="hidden"
-            onclick="logout()"
-        >
-            Log Out
-        </button>
-    </div>
 </header>
-
 
 <div class="container">
 
-    <!-- LOGIN -->
-    <section id="login-section" class="panel">
-
+    <section id="loginSection" class="panel">
         <h2>Login</h2>
 
         <input
-            id="login-username"
+            id="loginUsername"
             type="text"
             placeholder="Username"
-            autocomplete="username"
         >
 
         <input
-            id="login-password"
+            id="loginPassword"
             type="password"
             placeholder="Password"
-            autocomplete="current-password"
         >
 
-        <button onclick="login()">
-            Login
-        </button>
+        <button onclick="login()">Login</button>
 
-        <button onclick="showRegister()">
-            Create Account
-        </button>
-
-        <div id="login-message" class="message"></div>
-
+        <div id="loginMessage" class="message hidden"></div>
     </section>
 
-
-    <!-- REGISTER -->
-    <section id="register-section" class="panel hidden">
-
-        <h2>Create Account</h2>
+    <section id="registerSection" class="panel">
+        <h2>Register</h2>
 
         <input
-            id="register-username"
+            id="registerUsername"
             type="text"
             placeholder="Username"
-            autocomplete="username"
         >
 
         <input
-            id="register-password"
+            id="registerPassword"
             type="password"
             placeholder="Password"
-            autocomplete="new-password"
         >
 
-        <input
-            id="register-confirm"
-            type="password"
-            placeholder="Confirm Password"
-            autocomplete="new-password"
-        >
+        <button onclick="register()">Register</button>
 
-        <button onclick="register()">
-            Create Account
-        </button>
-
-        <button onclick="showLogin()">
-            Back to Login
-        </button>
-
-        <div id="register-message" class="message"></div>
-
+        <div id="registerMessage" class="message hidden"></div>
     </section>
 
+    <section id="userSection" class="panel hidden">
+        <h2>User</h2>
 
-    <!-- WEBSITE -->
-    <section id="website-section" class="hidden">
+        <p id="userInfo"></p>
+
+        <button onclick="logout()">Log out</button>
+    </section>
+
+    <section id="websiteSection" class="hidden">
 
         <div class="panel">
-
-            <div class="user-info">
-                Logged in as:
-                <strong id="username-display"></strong>
-            </div>
-
-        </div>
-
-
-        <!-- CREATE POST -->
-        <section
-            id="create-post-section"
-            class="panel hidden"
-        >
-
-            <h2>Create Post</h2>
-
-            <input
-                id="post-title"
-                type="text"
-                placeholder="Post title"
-            >
-
-            <select id="post-category">
-
-                <option value="all">
-                    0rel’s Mods
-                </option>
-
-                <option value="libs">
-                    libs
-                </option>
-
-                <option value="apk’s">
-                    apk’s
-                </option>
-
-                <option value="Metadata’s">
-                    Metadata’s
-                </option>
-
-                <option value="rooting">
-                    Rooting
-                </option>
-
-                <option value="Frida mods">
-                    Frida mods
-                </option>
-
-                <option value="Root mods">
-                    Root mods
-                </option>
-
-            </select>
-
-            <textarea
-                id="post-text"
-                placeholder="Post text"
-            ></textarea>
-
-
-            <div class="file-row">
-
-                <label
-                    for="post-file"
-                    class="file-button"
-                >
-                    Select File
-                </label>
-
-                <input
-                    id="post-file"
-                    type="file"
-                    hidden
-                >
-
-                <span
-                    id="file-name"
-                    class="file-name"
-                >
-                    File not selected
-                </span>
-
-            </div>
-
-
-            <button onclick="createPost()">
-                Post
-            </button>
-
-            <div
-                id="post-message"
-                class="message"
-            ></div>
-
-        </section>
-
-
-        <!-- CATEGORIES -->
-        <section class="panel">
-
             <h2>Categories</h2>
 
             <div class="categories">
 
                 <button
-                    class="category active"
-                    data-category="all"
-                    onclick="showCategory('all')"
+                    class="category-button"
+                    onclick="selectCategory('all')"
                 >
                     0rel’s Mods
                 </button>
 
                 <button
-                    class="category"
-                    data-category="libs"
-                    onclick="showCategory('libs')"
+                    class="category-button"
+                    onclick="selectCategory('libs')"
                 >
                     libs
                 </button>
 
                 <button
-                    class="category"
-                    data-category="apk’s"
-                    onclick="showCategory('apk’s')"
+                    class="category-button"
+                    onclick="selectCategory('apk’s')"
                 >
                     apk’s
                 </button>
 
                 <button
-                    class="category"
-                    data-category="Metadata’s"
-                    onclick="showCategory('Metadata’s')"
+                    class="category-button"
+                    onclick="selectCategory('Metadata’s')"
                 >
                     Metadata’s
                 </button>
 
                 <button
-                    class="category"
-                    data-category="rooting"
-                    onclick="showCategory('rooting')"
+                    class="category-button"
+                    onclick="selectCategory('Rooting')"
                 >
                     Rooting
                 </button>
 
                 <button
-                    class="category"
-                    data-category="Frida mods"
-                    onclick="showCategory('Frida mods')"
+                    class="category-button"
+                    onclick="selectCategory('Frida mods')"
                 >
                     Frida mods
                 </button>
 
                 <button
-                    class="category"
-                    data-category="Root mods"
-                    onclick="showCategory('Root mods')"
+                    class="category-button"
+                    onclick="selectCategory('Root mods')"
                 >
                     Root mods
                 </button>
 
             </div>
+        </div>
 
-            <h2 id="category-title">
-                0rel’s Mods
-            </h2>
+        <section
+            id="createPostSection"
+            class="panel hidden"
+        >
+            <h2>Create Post</h2>
 
-            <div id="posts-container"></div>
+            <select id="postCategory">
+                <option value="all">0rel’s Mods</option>
+                <option value="libs">libs</option>
+                <option value="apk’s">apk’s</option>
+                <option value="Metadata’s">Metadata’s</option>
+                <option value="Rooting">Rooting</option>
+                <option value="Frida mods">Frida mods</option>
+                <option value="Root mods">Root mods</option>
+            </select>
 
+            <input
+                id="postTitle"
+                type="text"
+                placeholder="Post title"
+            >
+
+            <textarea
+                id="postText"
+                placeholder="Post text"
+            ></textarea>
+
+            <div class="select-file-wrapper">
+
+                <label
+                    for="postFile"
+                    class="select-file-button"
+                >
+                    Select File
+                </label>
+
+                <input
+                    id="postFile"
+                    type="file"
+                    class="hidden"
+                    onchange="showSelectedFile()"
+                >
+
+                <span id="fileName">
+                    No file selected
+                </span>
+
+            </div>
+
+            <button onclick="createPost()">
+                Create Post
+            </button>
+
+            <div
+                id="postMessage"
+                class="message hidden"
+            ></div>
+        </section>
+
+        <section
+            id="staffSection"
+            class="panel hidden"
+        >
+            <h2>Staff</h2>
+
+            <button onclick="openStaff()">
+                Open Staff Panel
+            </button>
+        </section>
+
+        <section class="panel">
+            <h2 id="postsTitle">0rel’s Mods</h2>
+
+            <div id="posts">
+                Loading...
+            </div>
         </section>
 
     </section>
 
 </div>
 
-
-<footer>
-    0MH Website
-</footer>
-
-
 <script>
-
+    let currentUser = null;
     let currentCategory = "all";
 
+    // ========================================
+    // STAFF CHECK
+    // ========================================
 
-    function escapeHTML(value) {
-
-        if (value === null || value === undefined) {
-            return "";
+    function isStaffUser(user = currentUser) {
+        if (!user) {
+            return false;
         }
 
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        const role = String(user.role || "")
+            .trim()
+            .toLowerCase();
+
+        const username = String(user.username || "")
+            .trim()
+            .toLowerCase();
+
+        return (
+            role === "admin" ||
+            role === "owner" ||
+            username === "0relgt"
+        );
     }
 
+    // ========================================
+    // CHECK USER
+    // ========================================
 
-    function categoryName(category) {
-
-        const names = {
-            "all": "0rel’s Mods",
-            "libs": "libs",
-            "apk’s": "apk’s",
-            "Metadata’s": "Metadata’s",
-            "rooting": "Rooting",
-            "Frida mods": "Frida mods",
-            "Root mods": "Root mods"
-        };
-
-        return names[category] || category;
-    }
-
-
-    function showRegister() {
-
-        document
-            .getElementById("login-section")
-            .classList.add("hidden");
-
-        document
-            .getElementById("register-section")
-            .classList.remove("hidden");
-
-        document
-            .getElementById("login-message")
-            .textContent = "";
-
-        document
-            .getElementById("register-message")
-            .textContent = "";
-    }
-
-
-    function showLogin() {
-
-        document
-            .getElementById("register-section")
-            .classList.add("hidden");
-
-        document
-            .getElementById("login-section")
-            .classList.remove("hidden");
-
-        document
-            .getElementById("login-message")
-            .textContent = "";
-
-        document
-            .getElementById("register-message")
-            .textContent = "";
-    }
-
-
-    async function register() {
-
-        const username =
-            document
-                .getElementById("register-username")
-                .value
-                .trim();
-
-        const password =
-            document
-                .getElementById("register-password")
-                .value;
-
-        const confirm =
-            document
-                .getElementById("register-confirm")
-                .value;
-
-        const message =
-            document
-                .getElementById("register-message");
-
-
-        if (!username || !password || !confirm) {
-
-            message.textContent =
-                "Please fill in all fields.";
-
-            message.className =
-                "message error";
-
-            return;
-        }
-
-
-        if (password !== confirm) {
-
-            message.textContent =
-                "Passwords do not match.";
-
-            message.className =
-                "message error";
-
-            return;
-        }
-
-
+    async function checkUser() {
         try {
+            const response = await fetch(
+                "/api/me",
+                {
+                    credentials: "include"
+                }
+            );
 
-            const response =
-                await fetch(
-                    "/api/register",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({
-                            username,
-                            password
-                        })
-                    }
-                );
+            const data = await response.json();
 
+            if (!data.loggedIn) {
+                currentUser = null;
 
-            const data =
-                await response.json();
+                document
+                    .getElementById("loginSection")
+                    .classList.remove("hidden");
 
+                document
+                    .getElementById("registerSection")
+                    .classList.remove("hidden");
 
-            if (!response.ok) {
+                document
+                    .getElementById("userSection")
+                    .classList.add("hidden");
 
-                message.textContent =
-                    data.error ||
-                    "Registration failed.";
+                document
+                    .getElementById("websiteSection")
+                    .classList.add("hidden");
 
-                message.className =
-                    "message error";
+                document
+                    .getElementById("createPostSection")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("staffSection")
+                    .classList.add("hidden");
 
                 return;
             }
 
+            currentUser = data.user;
 
-            message.textContent =
-                "Account created successfully.";
+            document
+                .getElementById("loginSection")
+                .classList.add("hidden");
 
-            message.className =
-                "message success";
+            document
+                .getElementById("registerSection")
+                .classList.add("hidden");
 
+            document
+                .getElementById("userSection")
+                .classList.remove("hidden");
 
-            setTimeout(() => {
+            document
+                .getElementById("websiteSection")
+                .classList.remove("hidden");
 
-                showLogin();
+            document
+                .getElementById("userInfo")
+                .textContent =
+                `Logged in as ${currentUser.username} | Role: ${currentUser.role}`;
 
-            }, 800);
+            if (isStaffUser()) {
+                document
+                    .getElementById("createPostSection")
+                    .classList.remove("hidden");
+
+                document
+                    .getElementById("staffSection")
+                    .classList.remove("hidden");
+            } else {
+                document
+                    .getElementById("createPostSection")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("staffSection")
+                    .classList.add("hidden");
+            }
+
+            loadPosts();
 
         } catch (error) {
-
-            message.textContent =
-                "Server error.";
-
-            message.className =
-                "message error";
+            console.error(
+                "Check user error:",
+                error
+            );
         }
     }
 
+    // ========================================
+    // LOGIN
+    // ========================================
 
     async function login() {
-
         const username =
             document
-                .getElementById("login-username")
+                .getElementById("loginUsername")
                 .value
                 .trim();
 
         const password =
             document
-                .getElementById("login-password")
+                .getElementById("loginPassword")
                 .value;
 
         const message =
-            document
-                .getElementById("login-message");
-
-
-        if (!username || !password) {
-
-            message.textContent =
-                "Please enter username and password.";
-
-            message.className =
-                "message error";
-
-            return;
-        }
-
+            document.getElementById(
+                "loginMessage"
+            );
 
         try {
+            const response = await fetch(
+                "/auth/login",
+                {
+                    method: "POST",
 
-            const response =
-                await fetch(
-                    "/api/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({
-                            username,
-                            password
-                        })
-                    }
-                );
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
+                    credentials: "include",
+
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
+                }
+            );
 
             const data =
                 await response.json();
 
-
-            if (!response.ok) {
-
+            if (!response.ok || !data.success) {
                 message.textContent =
-                    data.error ||
+                    data.message ||
                     "Login failed.";
 
-                message.className =
-                    "message error";
+                message.classList.remove(
+                    "hidden"
+                );
 
                 return;
             }
 
-
-            message.textContent =
-                "Login successful.";
-
-            message.className =
-                "message success";
-
+            message.classList.add("hidden");
 
             await checkUser();
 
         } catch (error) {
+            console.error(
+                "Login error:",
+                error
+            );
 
             message.textContent =
-                "Server error.";
+                "Unable to connect to the server.";
 
-            message.className =
-                "message error";
+            message.classList.remove(
+                "hidden"
+            );
         }
     }
 
+    // ========================================
+    // REGISTER
+    // ========================================
 
-    async function logout() {
+    async function register() {
+        const username =
+            document
+                .getElementById("registerUsername")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("registerPassword")
+                .value;
+
+        const message =
+            document.getElementById(
+                "registerMessage"
+            );
 
         try {
+            const response = await fetch(
+                "/auth/register",
+                {
+                    method: "POST",
 
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    credentials: "include",
+
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
+                }
+            );
+
+            const data =
+                await response.json();
+
+            if (!response.ok || !data.success) {
+                message.textContent =
+                    data.message ||
+                    "Registration failed.";
+
+                message.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+            message.textContent =
+                "Account created successfully. You can now login.";
+
+            message.classList.remove(
+                "hidden"
+            );
+
+        } catch (error) {
+            console.error(
+                "Register error:",
+                error
+            );
+
+            message.textContent =
+                "Unable to connect to the server.";
+
+            message.classList.remove(
+                "hidden"
+            );
+        }
+    }
+
+    // ========================================
+    // LOGOUT
+    // ========================================
+
+    async function logout() {
+        try {
             await fetch(
                 "/api/logout",
                 {
@@ -876,379 +682,276 @@
                     credentials: "include"
                 }
             );
-
         } catch (error) {
+            console.error(
+                "Logout error:",
+                error
+            );
         }
 
+        currentUser = null;
 
-        location.reload();
+        document
+            .getElementById("loginSection")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("registerSection")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("userSection")
+            .classList.add("hidden");
+
+        document
+            .getElementById("websiteSection")
+            .classList.add("hidden");
+
+        document
+            .getElementById("createPostSection")
+            .classList.add("hidden");
+
+        document
+            .getElementById("staffSection")
+            .classList.add("hidden");
     }
 
+    // ========================================
+    // CATEGORY
+    // ========================================
 
-    async function checkUser() {
+    function selectCategory(category) {
+        currentCategory = normalizeCategory(category);
 
-        try {
+        const title =
+            document.getElementById("postsTitle");
 
-            const response =
-                await fetch(
-                    "/api/me",
-                    {
-                        credentials: "include"
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            if (
-                !response.ok ||
-                !data.loggedIn
-            ) {
-
-                document
-                    .getElementById("login-section")
-                    .classList.remove("hidden");
-
-                document
-                    .getElementById("register-section")
-                    .classList.add("hidden");
-
-                document
-                    .getElementById("website-section")
-                    .classList.add("hidden");
-
-                document
-                    .getElementById("staff-button")
-                    .classList.add("hidden");
-
-                document
-                    .getElementById("logout-button")
-                    .classList.add("hidden");
-
-                return;
-            }
-
-
-            document
-                .getElementById("login-section")
-                .classList.add("hidden");
-
-            document
-                .getElementById("register-section")
-                .classList.add("hidden");
-
-            document
-                .getElementById("website-section")
-                .classList.remove("hidden");
-
-            document
-                .getElementById("logout-button")
-                .classList.remove("hidden");
-
-
-            const username =
-                data.user.username;
-
-            const role =
-                data.user.role;
-
-
-            document
-                .getElementById("username-display")
-                .textContent =
-                    username;
-
-
-            if (
-                role === "owner" ||
-                role === "admin"
-            ) {
-
-                document
-                    .getElementById("staff-button")
-                    .classList.remove("hidden");
-
-                document
-                    .getElementById("create-post-section")
-                    .classList.remove("hidden");
-
-            } else {
-
-                document
-                    .getElementById("staff-button")
-                    .classList.add("hidden");
-
-                document
-                    .getElementById("create-post-section")
-                    .classList.add("hidden");
-            }
-
-
-            loadPosts();
-
-        } catch (error) {
-
-            console.error(error);
+        if (currentCategory === "all") {
+            title.textContent = "0rel’s Mods";
+        } else {
+            title.textContent = category;
         }
-    }
-
-
-    function showCategory(category) {
-
-        currentCategory =
-            category;
-
-
-        document
-            .querySelectorAll(".category")
-            .forEach(button => {
-
-                button.classList.toggle(
-                    "active",
-                    button.dataset.category === category
-                );
-
-            });
-
-
-        document
-            .getElementById("category-title")
-            .textContent =
-                categoryName(category);
-
 
         loadPosts();
     }
 
+    // ========================================
+    // NORMALIZE CATEGORY
+    // ========================================
+
+    function normalizeCategory(category) {
+        return String(category || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[’']/g, "'");
+    }
+
+    // ========================================
+    // LOAD POSTS
+    // ========================================
 
     async function loadPosts() {
+        const postsContainer =
+            document.getElementById("posts");
+
+        postsContainer.innerHTML =
+            "<p>Loading...</p>";
 
         try {
-
             const response =
                 await fetch(
                     "/api/posts",
                     {
-                        credentials: "include"
+                        credentials: "include",
+                        cache: "no-store"
                     }
                 );
-
 
             const data =
                 await response.json();
 
+            const posts =
+                Array.isArray(data.posts)
+                    ? data.posts
+                    : [];
 
-            displayPosts(
-                Array.isArray(data)
-                    ? data
-                    : []
-            );
+            displayPosts(posts);
 
         } catch (error) {
+            console.error(
+                "Load posts error:",
+                error
+            );
 
-            console.error(error);
-
-            document
-                .getElementById("posts-container")
-                .innerHTML =
-                    "<p>Failed to load posts.</p>";
+            postsContainer.innerHTML =
+                "<p>Failed to load posts.</p>";
         }
     }
 
+    // ========================================
+    // DISPLAY POSTS
+    // ========================================
 
     function displayPosts(posts) {
-
         const container =
-            document
-                .getElementById("posts-container");
+            document.getElementById("posts");
 
+        const selectedCategory =
+            normalizeCategory(currentCategory);
 
-        const filteredPosts =
+        const filtered =
             posts.filter(post => {
 
-                return String(
-                    post.category || ""
-                ).toLowerCase() ===
-                String(
-                    currentCategory
-                ).toLowerCase();
+                const postCategory =
+                    normalizeCategory(
+                        post.category
+                    );
 
+                if (selectedCategory === "all") {
+                    return postCategory === "all";
+                }
+
+                return (
+                    postCategory ===
+                    selectedCategory
+                );
             });
 
-
-        if (filteredPosts.length === 0) {
-
+        if (filtered.length === 0) {
             container.innerHTML =
-                "<p>No posts in this category yet.</p>";
+                "<p>No posts in this category.</p>";
 
             return;
         }
 
-
         container.innerHTML =
-            filteredPosts
+            filtered
                 .map(post => {
-
-                    const title =
-                        escapeHTML(
-                            post.title ||
-                            "Untitled"
-                        );
-
-                    const text =
-                        escapeHTML(
-                            post.text || ""
-                        );
-
-                    const category =
-                        escapeHTML(
-                            categoryName(
-                                post.category || ""
-                            )
-                        );
-
 
                     let fileHTML = "";
 
-
-                    if (post.file) {
-
+                    if (
+                        post.file &&
+                        post.file.url
+                    ) {
                         const fileName =
-                            escapeHTML(
-                                post.fileName ||
-                                "Download File"
-                            );
-
+                            post.file.originalName ||
+                            post.file.fileName ||
+                            "Download File";
 
                         fileHTML = `
-                            <div class="post-file">
+                            <div class="file-box">
                                 <a
-                                    href="${escapeHTML(post.file)}"
+                                    href="${escapeHTML(post.file.url)}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    ${fileName}
+                                    ${escapeHTML(fileName)}
                                 </a>
                             </div>
                         `;
                     }
 
+                    let staffButtons = "";
 
-                    const actions = `
+                    if (isStaffUser()) {
+                        staffButtons = `
+                            <div>
+                                <button
+                                    onclick="editPost('${escapeHTML(post.id)}')"
+                                >
+                                    Edit
+                                </button>
 
-                        <div class="post-actions">
-
-                            <button
-                                class="edit-button"
-                                onclick="editPost('${escapeHTML(post.id)}')"
-                            >
-                                Edit
-                            </button>
-
-                            <button
-                                class="delete-button"
-                                onclick="deletePost('${escapeHTML(post.id)}')"
-                            >
-                                Delete
-                            </button>
-
-                        </div>
-
-                    `;
-
+                                <button
+                                    onclick="deletePost('${escapeHTML(post.id)}')"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        `;
+                    }
 
                     return `
-
                         <article class="post">
 
                             <h3>
-                                ${title}
+                                ${escapeHTML(post.title || "")}
                             </h3>
 
-                            <div class="post-category">
-                                ${category}
+                            <div class="post-meta">
+                                Category:
+                                ${escapeHTML(post.category || "")}
+                                <br>
+                                Author:
+                                ${escapeHTML(post.author || "Unknown")}
+                                <br>
+                                ${
+                                    post.createdAt
+                                        ? new Date(
+                                            post.createdAt
+                                        ).toLocaleString()
+                                        : ""
+                                }
                             </div>
 
                             <div class="post-text">
-                                ${text}
+                                ${escapeHTML(post.text || "")}
                             </div>
 
                             ${fileHTML}
 
-                            ${actions}
+                            ${staffButtons}
 
                         </article>
-
                     `;
-
                 })
                 .join("");
     }
 
+    // ========================================
+    // CREATE POST
+    // ========================================
 
     async function createPost() {
-
-        const title =
-            document
-                .getElementById("post-title")
-                .value
-                .trim();
+        if (!isStaffUser()) {
+            return;
+        }
 
         const category =
             document
-                .getElementById("post-category")
+                .getElementById("postCategory")
                 .value;
 
-        const text =
+        const title =
             document
-                .getElementById("post-text")
+                .getElementById("postTitle")
                 .value
                 .trim();
 
-        const file =
+        const text =
             document
-                .getElementById("post-file")
-                .files[0];
+                .getElementById("postText")
+                .value
+                .trim();
+
+        const fileInput =
+            document.getElementById("postFile");
 
         const message =
-            document
-                .getElementById("post-message");
+            document.getElementById("postMessage");
 
-
-        if (!title) {
-
+        if (!category || !title || !text) {
             message.textContent =
-                "Please enter a post title.";
+                "Category, title and text are required.";
 
-            message.className =
-                "message error";
+            message.classList.remove("hidden");
 
             return;
         }
-
-
-        if (!text && !file) {
-
-            message.textContent =
-                "Please add text or a file.";
-
-            message.className =
-                "message error";
-
-            return;
-        }
-
 
         const formData =
             new FormData();
-
-
-        formData.append(
-            "title",
-            title
-        );
 
         formData.append(
             "category",
@@ -1256,22 +959,26 @@
         );
 
         formData.append(
+            "title",
+            title
+        );
+
+        formData.append(
             "text",
             text
         );
 
-
-        if (file) {
-
+        if (
+            fileInput.files &&
+            fileInput.files.length > 0
+        ) {
             formData.append(
                 "file",
-                file
+                fileInput.files[0]
             );
         }
 
-
         try {
-
             const response =
                 await fetch(
                     "/api/posts",
@@ -1282,183 +989,193 @@
                     }
                 );
 
-
             const data =
                 await response.json();
 
-
-            if (!response.ok) {
-
+            if (!response.ok || !data.success) {
                 message.textContent =
-                    data.error ||
+                    data.message ||
                     "Failed to create post.";
 
-                message.className =
-                    "message error";
+                message.classList.remove(
+                    "hidden"
+                );
 
                 return;
             }
 
-
             message.textContent =
                 "Post created successfully.";
 
-            message.className =
-                "message success";
-
+            message.classList.remove(
+                "hidden"
+            );
 
             document
-                .getElementById("post-title")
+                .getElementById("postTitle")
                 .value = "";
 
-
             document
-                .getElementById("post-text")
+                .getElementById("postText")
                 .value = "";
 
-
             document
-                .getElementById("post-file")
+                .getElementById("postFile")
                 .value = "";
 
-
             document
-                .getElementById("file-name")
+                .getElementById("fileName")
                 .textContent =
-                    "File not selected";
+                "No file selected";
 
+            currentCategory =
+                normalizeCategory(category);
 
-            loadPosts();
+            document
+                .getElementById("postsTitle")
+                .textContent =
+                category === "all"
+                    ? "0rel’s Mods"
+                    : category;
+
+            await loadPosts();
 
         } catch (error) {
-
-            console.error(error);
+            console.error(
+                "Create post error:",
+                error
+            );
 
             message.textContent =
-                "Server error.";
+                "Unable to connect to the server.";
 
-            message.className =
-                "message error";
+            message.classList.remove(
+                "hidden"
+            );
         }
     }
 
+    // ========================================
+    // SELECT FILE
+    // ========================================
 
-    document
-        .getElementById("post-file")
-        .addEventListener(
-            "change",
-            function () {
+    function showSelectedFile() {
+        const input =
+            document.getElementById("postFile");
 
-                const fileName =
-                    document
-                        .getElementById("file-name");
+        const fileName =
+            document.getElementById("fileName");
 
+        if (
+            input.files &&
+            input.files.length > 0
+        ) {
+            fileName.textContent =
+                input.files[0].name;
+        } else {
+            fileName.textContent =
+                "No file selected";
+        }
+    }
 
-                if (
-                    this.files &&
-                    this.files.length > 0
-                ) {
-
-                    fileName.textContent =
-                        this.files[0].name;
-
-                } else {
-
-                    fileName.textContent =
-                        "File not selected";
-                }
-
-            }
-        );
-
+    // ========================================
+    // EDIT POST
+    // ========================================
 
     async function editPost(id) {
+        if (!isStaffUser()) {
+            return;
+        }
 
         const newTitle =
             prompt(
                 "Enter the new post title:"
             );
 
-
         if (newTitle === null) {
             return;
         }
-
 
         const newText =
             prompt(
                 "Enter the new post text:"
             );
 
-
         if (newText === null) {
             return;
         }
 
-
         try {
-
             const response =
                 await fetch(
                     `/api/posts/${encodeURIComponent(id)}`,
                     {
                         method: "PUT",
+
                         headers: {
                             "Content-Type":
                                 "application/json"
                         },
-                        credentials: "include",
+
+                        credentials:
+                            "include",
+
                         body: JSON.stringify({
-                            title: newTitle,
-                            text: newText
+                            category:
+                                currentCategory,
+                            title:
+                                newTitle,
+                            text:
+                                newText
                         })
                     }
                 );
 
-
             const data =
                 await response.json();
 
-
-            if (!response.ok) {
-
+            if (!response.ok || !data.success) {
                 alert(
-                    data.error ||
+                    data.message ||
                     "Failed to edit post."
                 );
 
                 return;
             }
 
-
-            loadPosts();
+            await loadPosts();
 
         } catch (error) {
-
-            console.error(error);
+            console.error(
+                "Edit post error:",
+                error
+            );
 
             alert(
-                "Server error."
+                "Unable to connect to the server."
             );
         }
     }
 
+    // ========================================
+    // DELETE POST
+    // ========================================
 
     async function deletePost(id) {
+        if (!isStaffUser()) {
+            return;
+        }
 
         const confirmed =
             confirm(
                 "Are you sure you want to delete this post?"
             );
 
-
         if (!confirmed) {
             return;
         }
 
-
         try {
-
             const response =
                 await fetch(
                     `/api/posts/${encodeURIComponent(id)}`,
@@ -1468,37 +1185,58 @@
                     }
                 );
 
-
             const data =
                 await response.json();
 
-
-            if (!response.ok) {
-
+            if (!response.ok || !data.success) {
                 alert(
-                    data.error ||
+                    data.message ||
                     "Failed to delete post."
                 );
 
                 return;
             }
 
-
-            loadPosts();
+            await loadPosts();
 
         } catch (error) {
-
-            console.error(error);
+            console.error(
+                "Delete post error:",
+                error
+            );
 
             alert(
-                "Server error."
+                "Unable to connect to the server."
             );
         }
     }
 
+    // ========================================
+    // STAFF
+    // ========================================
+
+    function openStaff() {
+        window.location.href = "/staff";
+    }
+
+    // ========================================
+    // ESCAPE HTML
+    // ========================================
+
+    function escapeHTML(value) {
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // ========================================
+    // START
+    // ========================================
 
     checkUser();
-
 </script>
 
 </body>

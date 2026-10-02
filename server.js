@@ -6,7 +6,7 @@ const session = require("express-session");
 const multer = require("multer");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const USERS_FILE = path.join(__dirname, "users.json");
 const POSTS_FILE = path.join(__dirname, "posts.json");
@@ -15,6 +15,10 @@ const UPLOADS_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
+
+// ========================================
+// FILE UPLOAD
+// ========================================
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -37,10 +41,15 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage,
+
     limits: {
         fileSize: 100 * 1024 * 1024
     }
 });
+
+// ========================================
+// MIDDLEWARE
+// ========================================
 
 app.use(express.json());
 
@@ -63,9 +72,8 @@ app.use(
         cookie: {
             httpOnly: true,
             sameSite: "lax",
-            secure: false,
-            maxAge:
-                7 * 24 * 60 * 60 * 1000
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 7 * 24 * 60 * 60 * 1000
         }
     })
 );
@@ -82,6 +90,17 @@ app.use(
 );
 
 // ========================================
+// CATEGORY NORMALIZATION
+// ========================================
+
+function normalizeCategory(category) {
+    return String(category || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[’']/g, "'");
+}
+
+// ========================================
 // USERS
 // ========================================
 
@@ -95,12 +114,16 @@ function loadUsers() {
     }
 
     try {
-        return JSON.parse(
-            fs.readFileSync(
-                USERS_FILE,
-                "utf8"
-            )
+        const data = fs.readFileSync(
+            USERS_FILE,
+            "utf8"
         );
+
+        const users = JSON.parse(data);
+
+        return Array.isArray(users)
+            ? users
+            : [];
     } catch {
         return [];
     }
@@ -132,12 +155,16 @@ function loadPosts() {
     }
 
     try {
-        return JSON.parse(
-            fs.readFileSync(
-                POSTS_FILE,
-                "utf8"
-            )
+        const data = fs.readFileSync(
+            POSTS_FILE,
+            "utf8"
         );
+
+        const posts = JSON.parse(data);
+
+        return Array.isArray(posts)
+            ? posts
+            : [];
     } catch {
         return [];
     }
@@ -184,7 +211,7 @@ function isOwner(user) {
     }
 
     return (
-        user.username
+        String(user.username)
             .trim()
             .toLowerCase() ===
         "0relgt"
@@ -196,10 +223,15 @@ function isAdmin(user) {
         return false;
     }
 
+    const role =
+        String(user.role || "")
+            .trim()
+            .toLowerCase();
+
     return (
         isOwner(user) ||
-        user.role === "admin" ||
-        user.role === "owner"
+        role === "admin" ||
+        role === "owner"
     );
 }
 
@@ -281,315 +313,352 @@ app.get("/staff", (req, res) => {
 // REGISTER
 // ========================================
 
-app.post(
-    "/api/register",
-    async (req, res) => {
-        try {
-            const username =
-                String(
-                    req.body.username || ""
-                ).trim();
+async function registerHandler(req, res) {
+    try {
+        const username =
+            String(
+                req.body.username || ""
+            ).trim();
 
-            const password =
-                String(
-                    req.body.password || ""
-                );
-
-            if (!username || !password) {
-                return res.status(400).json({
-                    success: false,
-                    message:
-                        "Username and password are required."
-                });
-            }
-
-            if (username.length < 3) {
-                return res.status(400).json({
-                    success: false,
-                    message:
-                        "Username must be at least 3 characters."
-                });
-            }
-
-            if (password.length < 6) {
-                return res.status(400).json({
-                    success: false,
-                    message:
-                        "Password must be at least 6 characters."
-                });
-            }
-
-            const users = loadUsers();
-
-            const exists =
-                users.find(
-                    user =>
-                        user.username
-                            .toLowerCase() ===
-                        username.toLowerCase()
-                );
-
-            if (exists) {
-                return res.status(409).json({
-                    success: false,
-                    message:
-                        "Username already exists."
-                });
-            }
-
-            const passwordHash =
-                await bcrypt.hash(
-                    password,
-                    12
-                );
-
-            const newUser = {
-                id:
-                    Date.now().toString(),
-
-                username,
-
-                passwordHash,
-
-                role:
-                    username
-                        .toLowerCase() ===
-                    "0relgt"
-                        ? "owner"
-                        : "user",
-
-                createdAt:
-                    new Date().toISOString(),
-
-                banned: false
-            };
-
-            users.push(newUser);
-
-            saveUsers(users);
-
-            res.json({
-                success: true,
-                message:
-                    "Account created successfully."
-            });
-
-        } catch (error) {
-            console.error(
-                "Register error:",
-                error
+        const password =
+            String(
+                req.body.password || ""
             );
 
-            res.status(500).json({
+        if (!username || !password) {
+            return res.status(400).json({
                 success: false,
                 message:
-                    "Server error."
+                    "Username and password are required."
             });
         }
+
+        if (username.length < 3) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Username must be at least 3 characters."
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Password must be at least 6 characters."
+            });
+        }
+
+        const users = loadUsers();
+
+        const exists =
+            users.find(
+                user =>
+                    String(user.username)
+                        .trim()
+                        .toLowerCase() ===
+                    username.toLowerCase()
+            );
+
+        if (exists) {
+            return res.status(409).json({
+                success: false,
+                message:
+                    "Username already exists."
+            });
+        }
+
+        const passwordHash =
+            await bcrypt.hash(
+                password,
+                12
+            );
+
+        const newUser = {
+            id:
+                Date.now().toString(),
+
+            username,
+
+            passwordHash,
+
+            role:
+                username
+                    .toLowerCase() ===
+                "0relgt"
+                    ? "owner"
+                    : "user",
+
+            createdAt:
+                new Date().toISOString(),
+
+            banned: false
+        };
+
+        users.push(newUser);
+
+        saveUsers(users);
+
+        res.json({
+            success: true,
+            message:
+                "Account created successfully."
+        });
+
+    } catch (error) {
+        console.error(
+            "Register error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message:
+                "Server error."
+        });
     }
+}
+
+app.post(
+    "/api/register",
+    registerHandler
+);
+
+app.post(
+    "/auth/register",
+    registerHandler
 );
 
 // ========================================
 // LOGIN
 // ========================================
 
-app.post(
-    "/api/login",
-    async (req, res) => {
-        try {
-            const username =
-                String(
-                    req.body.username || ""
-                ).trim();
+async function loginHandler(req, res) {
+    try {
+        const username =
+            String(
+                req.body.username || ""
+            ).trim();
 
-            const password =
-                String(
-                    req.body.password || ""
-                );
-
-            if (!username || !password) {
-                return res.status(400).json({
-                    success: false,
-                    message:
-                        "Username and password are required."
-                });
-            }
-
-            const users = loadUsers();
-
-            const user =
-                users.find(
-                    item =>
-                        item.username
-                            .trim()
-                            .toLowerCase() ===
-                        username.toLowerCase()
-                );
-
-            if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message:
-                        "Invalid username or password."
-                });
-            }
-
-            if (isOwner(user)) {
-                user.role = "owner";
-                saveUsers(users);
-            }
-
-            if (user.banned === true) {
-                return res.status(403).json({
-                    success: false,
-                    message:
-                        "You are banned from this website."
-                });
-            }
-
-            const correct =
-                await bcrypt.compare(
-                    password,
-                    user.passwordHash
-                );
-
-            if (!correct) {
-                return res.status(401).json({
-                    success: false,
-                    message:
-                        "Invalid username or password."
-                });
-            }
-
-            req.session.userId =
-                String(user.id);
-
-            req.session.save(error => {
-                if (error) {
-                    console.error(
-                        "Session save error:",
-                        error
-                    );
-
-                    return res.status(500).json({
-                        success: false,
-                        message:
-                            "Failed to create login session."
-                    });
-                }
-
-                res.json({
-                    success: true,
-
-                    message:
-                        "Login successful.",
-
-                    user: {
-                        username:
-                            user.username,
-
-                        role:
-                            isOwner(user)
-                                ? "owner"
-                                : user.role
-                    }
-                });
-            });
-
-        } catch (error) {
-            console.error(
-                "Login error:",
-                error
+        const password =
+            String(
+                req.body.password || ""
             );
 
-            res.status(500).json({
+        if (!username || !password) {
+            return res.status(400).json({
                 success: false,
                 message:
-                    "Server error."
+                    "Username and password are required."
             });
         }
+
+        const users = loadUsers();
+
+        const user =
+            users.find(
+                item =>
+                    String(item.username)
+                        .trim()
+                        .toLowerCase() ===
+                    username.toLowerCase()
+            );
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message:
+                    "Invalid username or password."
+            });
+        }
+
+        if (isOwner(user)) {
+            user.role = "owner";
+            saveUsers(users);
+        }
+
+        if (user.banned === true) {
+            return res.status(403).json({
+                success: false,
+                message:
+                    "You are banned from this website."
+            });
+        }
+
+        if (!user.passwordHash) {
+            return res.status(500).json({
+                success: false,
+                message:
+                    "This account has no password hash."
+            });
+        }
+
+        const correct =
+            await bcrypt.compare(
+                password,
+                user.passwordHash
+            );
+
+        if (!correct) {
+            return res.status(401).json({
+                success: false,
+                message:
+                    "Invalid username or password."
+            });
+        }
+
+        req.session.userId =
+            String(user.id);
+
+        req.session.save(error => {
+            if (error) {
+                console.error(
+                    "Session save error:",
+                    error
+                );
+
+                return res.status(500).json({
+                    success: false,
+                    message:
+                        "Failed to create login session."
+                });
+            }
+
+            res.json({
+                success: true,
+
+                message:
+                    "Login successful.",
+
+                user: {
+                    username:
+                        user.username,
+
+                    role:
+                        isOwner(user)
+                            ? "owner"
+                            : user.role
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error(
+            "Login error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message:
+                "Server error."
+        });
     }
+}
+
+app.post(
+    "/api/login",
+    loginHandler
+);
+
+app.post(
+    "/auth/login",
+    loginHandler
 );
 
 // ========================================
 // LOGOUT
 // ========================================
 
-app.post(
-    "/api/logout",
-    (req, res) => {
-        req.session.destroy(
-            error => {
-                if (error) {
-                    return res.status(500).json({
-                        success: false,
-                        message:
-                            "Logout failed."
-                    });
-                }
-
-                res.clearCookie(
-                    "connect.sid"
-                );
-
-                res.json({
-                    success: true
+function logoutHandler(req, res) {
+    req.session.destroy(
+        error => {
+            if (error) {
+                return res.status(500).json({
+                    success: false,
+                    message:
+                        "Logout failed."
                 });
             }
-        );
-    }
+
+            res.clearCookie(
+                "connect.sid"
+            );
+
+            res.json({
+                success: true
+            });
+        }
+    );
+}
+
+app.post(
+    "/api/logout",
+    logoutHandler
+);
+
+app.post(
+    "/auth/logout",
+    logoutHandler
 );
 
 // ========================================
 // CURRENT USER
 // ========================================
 
-app.get(
-    "/api/me",
-    (req, res) => {
-        const user = getUser(req);
+function currentUserHandler(req, res) {
+    const user = getUser(req);
 
-        if (!user) {
-            return res.json({
-                loggedIn: false
-            });
-        }
-
-        if (isOwner(user)) {
-            user.role = "owner";
-
-            const users = loadUsers();
-
-            const stored =
-                users.find(
-                    item =>
-                        String(item.id) ===
-                        String(user.id)
-                );
-
-            if (stored) {
-                stored.role = "owner";
-                saveUsers(users);
-            }
-        }
-
-        res.json({
-            loggedIn: true,
-
-            user: {
-                username:
-                    user.username,
-
-                role:
-                    isOwner(user)
-                        ? "owner"
-                        : user.role,
-
-                banned:
-                    user.banned === true
-            }
+    if (!user) {
+        return res.json({
+            loggedIn: false
         });
     }
+
+    if (isOwner(user)) {
+        user.role = "owner";
+
+        const users = loadUsers();
+
+        const stored =
+            users.find(
+                item =>
+                    String(item.id) ===
+                    String(user.id)
+            );
+
+        if (stored) {
+            stored.role = "owner";
+            saveUsers(users);
+        }
+    }
+
+    res.json({
+        loggedIn: true,
+
+        user: {
+            username:
+                user.username,
+
+            role:
+                isOwner(user)
+                    ? "owner"
+                    : user.role,
+
+            banned:
+                user.banned === true
+        }
+    });
+}
+
+app.get(
+    "/api/me",
+    currentUserHandler
+);
+
+app.get(
+    "/auth/me",
+    currentUserHandler
 );
 
 // ========================================
@@ -635,7 +704,6 @@ app.post(
     "/api/staff/ban",
     requireAdmin,
     (req, res) => {
-
         const username =
             String(
                 req.body.username || ""
@@ -643,10 +711,6 @@ app.post(
 
         const currentUser =
             getUser(req);
-
-        // ========================================
-        // PREVENT SELF-BAN
-        // ========================================
 
         if (
             currentUser &&
@@ -679,10 +743,6 @@ app.post(
                     "User not found."
             });
         }
-
-        // ========================================
-        // OWNER PROTECTION
-        // ========================================
 
         if (isOwner(user)) {
             return res.status(403).json({
@@ -786,7 +846,11 @@ app.post(
             });
         }
 
-        if (user.role === "admin") {
+        if (
+            String(user.role)
+                .toLowerCase() ===
+            "admin"
+        ) {
             user.role = "user";
 
             saveUsers(users);
@@ -819,9 +883,11 @@ app.post(
 app.get(
     "/api/posts",
     (req, res) => {
+        const posts = loadPosts();
+
         res.json({
             success: true,
-            posts: loadPosts()
+            posts
         });
     }
 );
@@ -853,9 +919,11 @@ app.post(
 
             if (!category || !title || !text) {
                 if (req.file) {
-                    fs.unlinkSync(
-                        req.file.path
-                    );
+                    try {
+                        fs.unlinkSync(
+                            req.file.path
+                        );
+                    } catch {}
                 }
 
                 return res.status(400).json({
@@ -866,6 +934,23 @@ app.post(
             }
 
             const user = getUser(req);
+
+            if (!user) {
+                if (req.file) {
+                    try {
+                        fs.unlinkSync(
+                            req.file.path
+                        );
+                    } catch {}
+                }
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "You must be logged in."
+                });
+            }
+
             const posts = loadPosts();
 
             const post = {
@@ -873,6 +958,9 @@ app.post(
                     Date.now().toString(),
 
                 category,
+
+                categoryKey:
+                    normalizeCategory(category),
 
                 title,
 
@@ -907,10 +995,17 @@ app.post(
 
             savePosts(posts);
 
+            console.log(
+                "POST CREATED:",
+                post
+            );
+
             res.json({
                 success: true,
+
                 message:
                     "Post created.",
+
                 post
             });
 
@@ -919,6 +1014,14 @@ app.post(
                 "Create post error:",
                 error
             );
+
+            if (req.file) {
+                try {
+                    fs.unlinkSync(
+                        req.file.path
+                    );
+                } catch {}
+            }
 
             res.status(500).json({
                 success: false,
@@ -937,11 +1040,20 @@ app.put(
     "/api/posts/:id",
     requireAdmin,
     (req, res) => {
-        const {
-            category,
-            title,
-            text
-        } = req.body;
+        const category =
+            String(
+                req.body.category || ""
+            ).trim();
+
+        const title =
+            String(
+                req.body.title || ""
+            ).trim();
+
+        const text =
+            String(
+                req.body.text || ""
+            ).trim();
 
         if (!category || !title || !text) {
             return res.status(400).json({
@@ -956,8 +1068,8 @@ app.put(
         const post =
             posts.find(
                 item =>
-                    item.id ===
-                    req.params.id
+                    String(item.id) ===
+                    String(req.params.id)
             );
 
         if (!post) {
@@ -969,8 +1081,14 @@ app.put(
         }
 
         post.category = category;
+
+        post.categoryKey =
+            normalizeCategory(category);
+
         post.title = title;
+
         post.text = text;
+
         post.updatedAt =
             new Date().toISOString();
 
@@ -996,8 +1114,8 @@ app.delete(
         const post =
             posts.find(
                 item =>
-                    item.id ===
-                    req.params.id
+                    String(item.id) ===
+                    String(req.params.id)
             );
 
         if (!post) {
@@ -1032,14 +1150,16 @@ app.delete(
         const remaining =
             posts.filter(
                 item =>
-                    item.id !==
-                    req.params.id
+                    String(item.id) !==
+                    String(req.params.id)
             );
 
         savePosts(remaining);
 
         res.json({
-            success: true
+            success: true,
+            message:
+                "Post deleted."
         });
     }
 );
@@ -1085,7 +1205,7 @@ app.get(
 );
 
 // ========================================
-// MULTER ERRORS
+// MULTER / SERVER ERRORS
 // ========================================
 
 app.use(
@@ -1126,14 +1246,14 @@ app.use(
 );
 
 // ========================================
-// START
+// START SERVER
 // ========================================
 
 app.listen(
     PORT,
     () => {
         console.log(
-            `0MH Website is running at http://localhost:${PORT}`
+            `0MH Website is running on port ${PORT}`
         );
 
         console.log(
