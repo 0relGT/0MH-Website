@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>0MH Website</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, #071b4d 0%, #020611 45%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #008cff;
+            box-shadow: 0 0 25px #008cff;
+            background: rgba(0, 10, 30, 0.8);
+        }
+
+        header h1 {
+            margin: 0;
+            color: #00aaff;
+            text-shadow:
+                0 0 5px #008cff,
+                0 0 15px #008cff,
+                0 0 30px #0066ff;
+        }
+
+        header p {
+            color: #b9eaff;
+            margin: 10px 0 20px;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button,
+        .discord-button {
+            border: 1px solid #008cff;
+            background: #03142e;
+            color: #ffffff;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+            box-shadow:
+                0 0 8px rgba(0, 140, 255, 0.5),
+                inset 0 0 8px rgba(0, 140, 255, 0.15);
+        }
+
+        button:hover,
+        .discord-button:hover {
+            background: #06356e;
+            box-shadow:
+                0 0 10px #008cff,
+                0 0 25px #0066ff;
+            transform: translateY(-1px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            width: min(1100px, 94%);
+            margin: 30px auto;
+        }
+
+        .panel {
+            background: rgba(2, 12, 30, 0.85);
+            border: 1px solid #0077ff;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow:
+                0 0 10px rgba(0, 119, 255, 0.5),
+                0 0 30px rgba(0, 60, 255, 0.15);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            color: #00aaff;
+            text-shadow: 0 0 12px #008cff;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #0077ff;
+            outline: none;
+            background: #020a18;
+            color: white;
+            box-shadow: inset 0 0 8px rgba(0, 119, 255, 0.15);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #00aaff;
+            box-shadow:
+                0 0 8px #008cff,
+                inset 0 0 8px rgba(0, 140, 255, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .message {
+            margin-top: 10px;
+            color: #8fd7ff;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #55ff9a;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .category {
+            flex: 1 1 130px;
+            min-width: 120px;
+        }
+
+        .category.active {
+            background: #0757a8;
+            box-shadow:
+                0 0 10px #008cff,
+                0 0 25px #0066ff;
+        }
+
+        #category-title {
+            color: #00aaff;
+            text-shadow: 0 0 12px #008cff;
+            margin-bottom: 20px;
+        }
+
+        .post {
+            background: rgba(1, 9, 23, 0.95);
+            border: 1px solid #006fff;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow:
+                0 0 8px rgba(0, 111, 255, 0.45);
+        }
+
+        .post h3 {
+            margin-top: 0;
+            color: #00aaff;
+            text-shadow: 0 0 8px #008cff;
+        }
+
+        .post-category {
+            display: inline-block;
+            font-size: 13px;
+            color: #8fd7ff;
+            margin-bottom: 10px;
+        }
+
+        .post-text {
+            white-space: pre-wrap;
+            color: #e7f6ff;
+            line-height: 1.5;
+        }
+
+        .post-file {
+            margin-top: 15px;
+        }
+
+        .post-file a {
+            color: #00aaff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .post-file a:hover {
+            text-decoration: underline;
+            text-shadow: 0 0 8px #008cff;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .edit-button {
+            border-color: #00aaff;
+        }
+
+        .delete-button {
+            border-color: #ff3d5a;
+            color: #ff8c9c;
+        }
+
+        .delete-button:hover {
+            background: #4a0b18;
+            box-shadow:
+                0 0 10px #ff3d5a,
+                0 0 20px #ff1744;
+        }
+
+        .user-info {
+            color: #9fdfff;
+            margin-bottom: 15px;
+        }
+
+        .file-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .file-button {
+            display: inline-block;
+            border: 1px solid #008cff;
+            background: #03142e;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            box-shadow:
+                0 0 8px rgba(0, 140, 255, 0.5),
+                inset 0 0 8px rgba(0, 140, 255, 0.15);
+        }
+
+        .file-button:hover {
+            background: #06356e;
+            box-shadow:
+                0 0 10px #008cff,
+                0 0 25px #0066ff;
+        }
+
+        .file-name {
+            color: #9fdfff;
+            word-break: break-all;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #6dbfff;
+            border-top: 1px solid #005eff;
+            margin-top: 50px;
+            box-shadow: 0 -5px 25px rgba(0, 100, 255, 0.15);
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 18px;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
+            .category {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>0MH Website</h1>
+
+    <p>
+        Welcome to 0MH Website
+    </p>
+
+    <div class="top-buttons">
+        <a
+            class="discord-button"
+            href="https://discord.gg/sAAFCSPSH"
+            target="_blank"
+        >
+            Join our Discord
+        </a>
+
+        <button
+            id="staff-button"
+            class="hidden"
+            onclick="window.location.href='/staff'"
+        >
+            Owner & Admin Powers
+        </button>
+
+        <button
+            id="logout-button"
+            class="hidden"
+            onclick="logout()"
+        >
+            Log Out
+        </button>
+    </div>
+</header>
+
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <section id="login-section" class="panel">
+
+        <h2>Login</h2>
+
+        <input
+            id="login-username"
+            type="text"
+            placeholder="Username"
+            autocomplete="username"
+        >
+
+        <input
+            id="login-password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
+
+        <button onclick="login()">
+            Login
+        </button>
+
+        <button onclick="showRegister()">
+            Create Account
+        </button>
+
+        <div id="login-message" class="message"></div>
+
+    </section>
+
+
+    <!-- REGISTER -->
+    <section id="register-section" class="panel hidden">
+
+        <h2>Create Account</h2>
+
+        <input
+            id="register-username"
+            type="text"
+            placeholder="Username"
+            autocomplete="username"
+        >
+
+        <input
+            id="register-password"
+            type="password"
+            placeholder="Password"
+            autocomplete="new-password"
+        >
+
+        <input
+            id="register-confirm"
+            type="password"
+            placeholder="Confirm Password"
+            autocomplete="new-password"
+        >
+
+        <button onclick="register()">
+            Create Account
+        </button>
+
+        <button onclick="showLogin()">
+            Back to Login
+        </button>
+
+        <div id="register-message" class="message"></div>
+
+    </section>
+
+
+    <!-- WEBSITE -->
+    <section id="website-section" class="hidden">
+
+        <div class="panel">
+
+            <div class="user-info">
+                Logged in as:
+                <strong id="username-display"></strong>
+            </div>
+
+        </div>
+
+
+        <!-- CREATE POST -->
+        <section
+            id="create-post-section"
+            class="panel hidden"
+        >
+
+            <h2>Create Post</h2>
+
+            <input
+                id="post-title"
+                type="text"
+                placeholder="Post title"
+            >
+
+            <select id="post-category">
+
+                <option value="all">
+                    0rel’s Mods
+                </option>
+
+                <option value="libs">
+                    libs
+                </option>
+
+                <option value="apk’s">
+                    apk’s
+                </option>
+
+                <option value="Metadata’s">
+                    Metadata’s
+                </option>
+
+                <option value="rooting">
+                    Rooting
+                </option>
+
+                <option value="Frida mods">
+                    Frida mods
+                </option>
+
+                <option value="Root mods">
+                    Root mods
+                </option>
+
+            </select>
+
+            <textarea
+                id="post-text"
+                placeholder="Post text"
+            ></textarea>
+
+
+            <div class="file-row">
+
+                <label
+                    for="post-file"
+                    class="file-button"
+                >
+                    Select File
+                </label>
+
+                <input
+                    id="post-file"
+                    type="file"
+                    hidden
+                >
+
+                <span
+                    id="file-name"
+                    class="file-name"
+                >
+                    File not selected
+                </span>
+
+            </div>
+
+
+            <button onclick="createPost()">
+                Post
+            </button>
+
+            <div
+                id="post-message"
+                class="message"
+            ></div>
+
+        </section>
+
+
+        <!-- CATEGORIES -->
+        <section class="panel">
+
+            <h2>Categories</h2>
+
+            <div class="categories">
+
+                <button
+                    class="category active"
+                    data-category="all"
+                    onclick="showCategory('all')"
+                >
+                    0rel’s Mods
+                </button>
+
+                <button
+                    class="category"
+                    data-category="libs"
+                    onclick="showCategory('libs')"
+                >
+                    libs
+                </button>
+
+                <button
+                    class="category"
+                    data-category="apk’s"
+                    onclick="showCategory('apk’s')"
+                >
+                    apk’s
+                </button>
+
+                <button
+                    class="category"
+                    data-category="Metadata’s"
+                    onclick="showCategory('Metadata’s')"
+                >
+                    Metadata’s
+                </button>
+
+                <button
+                    class="category"
+                    data-category="rooting"
+                    onclick="showCategory('rooting')"
+                >
+                    Rooting
+                </button>
+
+                <button
+                    class="category"
+                    data-category="Frida mods"
+                    onclick="showCategory('Frida mods')"
+                >
+                    Frida mods
+                </button>
+
+                <button
+                    class="category"
+                    data-category="Root mods"
+                    onclick="showCategory('Root mods')"
+                >
+                    Root mods
+                </button>
+
+            </div>
+
+            <h2 id="category-title">
+                0rel’s Mods
+            </h2>
+
+            <div id="posts-container"></div>
+
+        </section>
+
+    </section>
+
+</div>
+
+
+<footer>
+    0MH Website
+</footer>
+
+
+<script>
+
+    let currentCategory = "all";
+
+
+    function escapeHTML(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function categoryName(category) {
+
+        const names = {
+            "all": "0rel’s Mods",
+            "libs": "libs",
+            "apk’s": "apk’s",
+            "Metadata’s": "Metadata’s",
+            "rooting": "Rooting",
+            "Frida mods": "Frida mods",
+            "Root mods": "Root mods"
+        };
+
+        return names[category] || category;
+    }
+
+
+    function showRegister() {
+
+        document
+            .getElementById("login-section")
+            .classList.add("hidden");
+
+        document
+            .getElementById("register-section")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("login-message")
+            .textContent = "";
+
+        document
+            .getElementById("register-message")
+            .textContent = "";
+    }
+
+
+    function showLogin() {
+
+        document
+            .getElementById("register-section")
+            .classList.add("hidden");
+
+        document
+            .getElementById("login-section")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("login-message")
+            .textContent = "";
+
+        document
+            .getElementById("register-message")
+            .textContent = "";
+    }
+
+
+    async function register() {
+
+        const username =
+            document
+                .getElementById("register-username")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("register-password")
+                .value;
+
+        const confirm =
+            document
+                .getElementById("register-confirm")
+                .value;
+
+        const message =
+            document
+                .getElementById("register-message");
+
+
+        if (!username || !password || !confirm) {
+
+            message.textContent =
+                "Please fill in all fields.";
+
+            message.className =
+                "message error";
+
+            return;
+        }
+
+
+        if (password !== confirm) {
+
+            message.textContent =
+                "Passwords do not match.";
+
+            message.className =
+                "message error";
+
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                            username,
+                            password
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                message.textContent =
+                    data.error ||
+                    "Registration failed.";
+
+                message.className =
+                    "message error";
+
+                return;
+            }
+
+
+            message.textContent =
+                "Account created successfully.";
+
+            message.className =
+                "message success";
+
+
+            setTimeout(() => {
+
+                showLogin();
+
+            }, 800);
+
+        } catch (error) {
+
+            message.textContent =
+                "Server error.";
+
+            message.className =
+                "message error";
+        }
+    }
+
+
+    async function login() {
+
+        const username =
+            document
+                .getElementById("login-username")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("login-password")
+                .value;
+
+        const message =
+            document
+                .getElementById("login-message");
+
+
+        if (!username || !password) {
+
+            message.textContent =
+                "Please enter username and password.";
+
+            message.className =
+                "message error";
+
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                            username,
+                            password
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                message.textContent =
+                    data.error ||
+                    "Login failed.";
+
+                message.className =
+                    "message error";
+
+                return;
+            }
+
+
+            message.textContent =
+                "Login successful.";
+
+            message.className =
+                "message success";
+
+
+            await checkUser();
+
+        } catch (error) {
+
+            message.textContent =
+                "Server error.";
+
+            message.className =
+                "message error";
+        }
+    }
+
+
+    async function logout() {
+
+        try {
+
+            await fetch(
+                "/api/logout",
+                {
+                    method: "POST",
+                    credentials: "include"
+                }
+            );
+
+        } catch (error) {
+        }
+
+
+        location.reload();
+    }
+
+
+    async function checkUser() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/me",
+                    {
+                        credentials: "include"
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                !data.loggedIn
+            ) {
+
+                document
+                    .getElementById("login-section")
+                    .classList.remove("hidden");
+
+                document
+                    .getElementById("register-section")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("website-section")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("staff-button")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("logout-button")
+                    .classList.add("hidden");
+
+                return;
+            }
+
+
+            document
+                .getElementById("login-section")
+                .classList.add("hidden");
+
+            document
+                .getElementById("register-section")
+                .classList.add("hidden");
+
+            document
+                .getElementById("website-section")
+                .classList.remove("hidden");
+
+            document
+                .getElementById("logout-button")
+                .classList.remove("hidden");
+
+
+            const username =
+                data.user.username;
+
+            const role =
+                data.user.role;
+
+
+            document
+                .getElementById("username-display")
+                .textContent =
+                    username;
+
+
+            if (
+                role === "owner" ||
+                role === "admin"
+            ) {
+
+                document
+                    .getElementById("staff-button")
+                    .classList.remove("hidden");
+
+                document
+                    .getElementById("create-post-section")
+                    .classList.remove("hidden");
+
+            } else {
+
+                document
+                    .getElementById("staff-button")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("create-post-section")
+                    .classList.add("hidden");
+            }
+
+
+            loadPosts();
+
+        } catch (error) {
+
+            console.error(error);
+        }
+    }
+
+
+    function showCategory(category) {
+
+        currentCategory =
+            category;
+
+
+        document
+            .querySelectorAll(".category")
+            .forEach(button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.category === category
+                );
+
+            });
+
+
+        document
+            .getElementById("category-title")
+            .textContent =
+                categoryName(category);
+
+
+        loadPosts();
+    }
+
+
+    async function loadPosts() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/posts",
+                    {
+                        credentials: "include"
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            displayPosts(
+                Array.isArray(data)
+                    ? data
+                    : []
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            document
+                .getElementById("posts-container")
+                .innerHTML =
+                    "<p>Failed to load posts.</p>";
+        }
+    }
+
+
+    function displayPosts(posts) {
+
+        const container =
+            document
+                .getElementById("posts-container");
+
+
+        const filteredPosts =
+            posts.filter(post => {
+
+                return String(
+                    post.category || ""
+                ).toLowerCase() ===
+                String(
+                    currentCategory
+                ).toLowerCase();
+
+            });
+
+
+        if (filteredPosts.length === 0) {
+
+            container.innerHTML =
+                "<p>No posts in this category yet.</p>";
+
+            return;
+        }
+
+
+        container.innerHTML =
+            filteredPosts
+                .map(post => {
+
+                    const title =
+                        escapeHTML(
+                            post.title ||
+                            "Untitled"
+                        );
+
+                    const text =
+                        escapeHTML(
+                            post.text || ""
+                        );
+
+                    const category =
+                        escapeHTML(
+                            categoryName(
+                                post.category || ""
+                            )
+                        );
+
+
+                    let fileHTML = "";
+
+
+                    if (post.file) {
+
+                        const fileName =
+                            escapeHTML(
+                                post.fileName ||
+                                "Download File"
+                            );
+
+
+                        fileHTML = `
+                            <div class="post-file">
+                                <a
+                                    href="${escapeHTML(post.file)}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    ${fileName}
+                                </a>
+                            </div>
+                        `;
+                    }
+
+
+                    const actions = `
+
+                        <div class="post-actions">
+
+                            <button
+                                class="edit-button"
+                                onclick="editPost('${escapeHTML(post.id)}')"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="delete-button"
+                                onclick="deletePost('${escapeHTML(post.id)}')"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    return `
+
+                        <article class="post">
+
+                            <h3>
+                                ${title}
+                            </h3>
+
+                            <div class="post-category">
+                                ${category}
+                            </div>
+
+                            <div class="post-text">
+                                ${text}
+                            </div>
+
+                            ${fileHTML}
+
+                            ${actions}
+
+                        </article>
+
+                    `;
+
+                })
+                .join("");
+    }
+
+
+    async function createPost() {
+
+        const title =
+            document
+                .getElementById("post-title")
+                .value
+                .trim();
+
+        const category =
+            document
+                .getElementById("post-category")
+                .value;
+
+        const text =
+            document
+                .getElementById("post-text")
+                .value
+                .trim();
+
+        const file =
+            document
+                .getElementById("post-file")
+                .files[0];
+
+        const message =
+            document
+                .getElementById("post-message");
+
+
+        if (!title) {
+
+            message.textContent =
+                "Please enter a post title.";
+
+            message.className =
+                "message error";
+
+            return;
+        }
+
+
+        if (!text && !file) {
+
+            message.textContent =
+                "Please add text or a file.";
+
+            message.className =
+                "message error";
+
+            return;
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "title",
+            title
+        );
+
+        formData.append(
+            "category",
+            category
+        );
+
+        formData.append(
+            "text",
+            text
+        );
+
+
+        if (file) {
+
+            formData.append(
+                "file",
+                file
+            );
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/posts",
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                message.textContent =
+                    data.error ||
+                    "Failed to create post.";
+
+                message.className =
+                    "message error";
+
+                return;
+            }
+
+
+            message.textContent =
+                "Post created successfully.";
+
+            message.className =
+                "message success";
+
+
+            document
+                .getElementById("post-title")
+                .value = "";
+
+
+            document
+                .getElementById("post-text")
+                .value = "";
+
+
+            document
+                .getElementById("post-file")
+                .value = "";
+
+
+            document
+                .getElementById("file-name")
+                .textContent =
+                    "File not selected";
+
+
+            loadPosts();
+
+        } catch (error) {
+
+            console.error(error);
+
+            message.textContent =
+                "Server error.";
+
+            message.className =
+                "message error";
+        }
+    }
+
+
+    document
+        .getElementById("post-file")
+        .addEventListener(
+            "change",
+            function () {
+
+                const fileName =
+                    document
+                        .getElementById("file-name");
+
+
+                if (
+                    this.files &&
+                    this.files.length > 0
+                ) {
+
+                    fileName.textContent =
+                        this.files[0].name;
+
+                } else {
+
+                    fileName.textContent =
+                        "File not selected";
+                }
+
+            }
+        );
+
+
+    async function editPost(id) {
+
+        const newTitle =
+            prompt(
+                "Enter the new post title:"
+            );
+
+
+        if (newTitle === null) {
+            return;
+        }
+
+
+        const newText =
+            prompt(
+                "Enter the new post text:"
+            );
+
+
+        if (newText === null) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/posts/${encodeURIComponent(id)}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                            title: newTitle,
+                            text: newText
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    data.error ||
+                    "Failed to edit post."
+                );
+
+                return;
+            }
+
+
+            loadPosts();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Server error."
+            );
+        }
+    }
+
+
+    async function deletePost(id) {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this post?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/posts/${encodeURIComponent(id)}`,
+                    {
+                        method: "DELETE",
+                        credentials: "include"
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    data.error ||
+                    "Failed to delete post."
+                );
+
+                return;
+            }
+
+
+            loadPosts();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Server error."
+            );
+        }
+    }
+
+
+    checkUser();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>0rel's Mods | Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #082b78 0%,
+                    #031331 35%,
+                    #010611 75%,
+                    #000000 100%
+                );
+
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    rgba(0, 119, 255, 0.045) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(0, 119, 255, 0.045) 1px,
+                    transparent 1px
+                );
+
+            background-size: 35px 35px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+
+            padding: 22px 30px;
+
+            background:
+                rgba(0, 8, 25, 0.88);
+
+            border-bottom:
+                1px solid #0077ff;
+
+            box-shadow:
+                0 0 12px #006eff,
+                0 0 30px rgba(0, 110, 255, 0.35);
+        }
+
+        header h1 {
+            margin: 0;
+
+            font-size: 30px;
+
+            color: #ffffff;
+
+            text-shadow:
+                0 0 7px #00aaff,
+                0 0 18px #0077ff,
+                0 0 35px #0055ff;
+        }
+
+        header p {
+            margin:
+                6px 0 0;
+
+            color: #76c7ff;
+
+            text-shadow:
+                0 0 8px #0077ff;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            width: min(1200px, 92%);
+
+            margin:
+                0 auto;
+
+            padding:
+                40px 0 100px;
+        }
+
+        .section-title {
+            margin-bottom: 8px;
+
+            font-size: 28px;
+
+            text-shadow:
+                0 0 8px #008cff,
+                0 0 20px #006eff;
+        }
+
+        .section-description {
+            margin-top: 0;
+
+            color: #79c8ff;
+        }
+
+        /* =========================
+           CATEGORY BUTTONS
+        ========================= */
+
+        .buttons {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 20px;
+
+            margin-top: 30px;
+        }
+
+        .category-button {
+            min-height: 100px;
+
+            padding: 22px;
+
+            border:
+                1px solid #008cff;
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0, 75, 180, 0.35),
+                    rgba(0, 10, 35, 0.9)
+                );
+
+            color: #ffffff;
+
+            font-size: 19px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px #006eff,
+                0 0 25px rgba(0, 110, 255, 0.3),
+                inset 0 0 20px
+                rgba(0, 110, 255, 0.1);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                background 0.2s;
+        }
+
+        .category-button:hover {
+            transform:
+                translateY(-5px);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0, 110, 255, 0.55),
+                    rgba(0, 15, 50, 0.95)
+                );
+
+            box-shadow:
+                0 0 15px #0099ff,
+                0 0 35px #006eff,
+                0 0 60px
+                rgba(0, 110, 255, 0.45),
+                inset 0 0 25px
+                rgba(0, 150, 255, 0.15);
+        }
+
+        .category-button:active {
+            transform:
+                translateY(-2px)
+                scale(0.98);
+        }
+
+        /* =========================
+           CREATE BUTTON
+        ========================= */
+
+        .create-button {
+            position: fixed;
+
+            right: 30px;
+            bottom: 30px;
+
+            z-index: 20;
+
+            width: 70px;
+            height: 70px;
+
+            border:
+                2px solid #00aaff;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #087cff,
+                    #003a9e
+                );
+
+            color: #ffffff;
+
+            font-size: 38px;
+
+            font-weight: bold;
+
+            padding: 0;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 12px #008cff,
+                0 0 30px #006eff,
+                0 0 55px
+                rgba(0, 110, 255, 0.7);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .create-button:hover {
+            transform:
+                scale(1.08);
+
+            box-shadow:
+                0 0 18px #00aaff,
+                0 0 40px #0077ff,
+                0 0 70px
+                rgba(0, 140, 255, 0.8);
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 100;
+
+            background:
+                rgba(0, 3, 12, 0.82);
+
+            backdrop-filter:
+                blur(8px);
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 650px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding: 28px;
+
+            border:
+                1px solid #008cff;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #04183d,
+                    #010817
+                );
+
+            box-shadow:
+                0 0 18px #0077ff,
+                0 0 45px
+                rgba(0, 110, 255, 0.55),
+                inset 0 0 30px
+                rgba(0, 110, 255, 0.1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+
+            color: #ffffff;
+
+            text-shadow:
+                0 0 8px #00aaff,
+                0 0 20px #006eff;
+        }
+
+        /* =========================
+           FORMS
+        ========================= */
+
+        label {
+            display: block;
+
+            margin-top: 18px;
+            margin-bottom: 8px;
+
+            color: #8bd3ff;
+
+            font-weight: bold;
+
+            text-shadow:
+                0 0 6px #006eff;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #006eff;
+
+            border-radius: 9px;
+
+            background:
+                rgba(0, 5, 20, 0.9);
+
+            color: #ffffff;
+
+            font-size: 15px;
+
+            outline: none;
+
+            box-shadow:
+                0 0 7px
+                rgba(0, 110, 255, 0.35),
+                inset 0 0 10px
+                rgba(0, 70, 255, 0.08);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color:
+                #00aaff;
+
+            box-shadow:
+                0 0 10px #0077ff,
+                0 0 22px
+                rgba(0, 110, 255, 0.4);
+        }
+
+        textarea {
+            min-height: 150px;
+
+            resize: vertical;
+        }
+
+        select option {
+            background: #031331;
+            color: #ffffff;
+        }
+
+        /* =========================
+           FILES
+        ========================= */
+
+        .file-upload {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .file-upload button {
+            padding:
+                12px 18px;
+
+            border:
+                1px solid #008cff;
+
+            border-radius: 9px;
+
+            background:
+                #004fc4;
+
+            color: #ffffff;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px
+                rgba(0, 110, 255, 0.5);
+        }
+
+        .file-upload button:hover {
+            background:
+                #006eff;
+
+            box-shadow:
+                0 0 15px #008cff;
+        }
+
+        #fileNames {
+            color: #73c7ff;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           MODAL BUTTONS
+        ========================= */
+
+        .modal-buttons {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 22px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+
+            padding: 14px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+        }
+
+        .post-button {
+            border:
+                1px solid #00aaff;
+
+            background:
+                #006eff;
+
+            color: #ffffff;
+
+            box-shadow:
+                0 0 12px #0077ff;
+        }
+
+        .post-button:hover {
+            background:
+                #008cff;
+
+            box-shadow:
+                0 0 20px #00aaff;
+        }
+
+        .close-button {
+            border:
+                1px solid #006eff;
+
+            background:
+                #031331;
+
+            color: #ffffff;
+        }
+
+        .close-button:hover {
+            background:
+                #082b78;
+
+            box-shadow:
+                0 0 12px #006eff;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+            margin-top: 15px;
+
+            color: #79c8ff;
+
+            text-shadow:
+                0 0 7px #006eff;
+        }
+
+        /* =========================
+           DISCORD
+        ========================= */
+
+        .discord {
+            display: inline-block;
+
+            margin-top: 25px;
+
+            padding:
+                10px 16px;
+
+            border:
+                1px solid #008cff;
+
+            border-radius: 9px;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            background:
+                rgba(0, 70, 180, 0.3);
+
+            box-shadow:
+                0 0 10px
+                rgba(0, 110, 255, 0.5);
+        }
+
+        .discord:hover {
+            background:
+                rgba(0, 110, 255, 0.55);
+
+            box-shadow:
+                0 0 18px #0077ff;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding-top: 25px;
+            }
+
+            .buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .create-button {
+                right: 20px;
+                bottom: 20px;
+
+                width: 62px;
+                height: 62px;
+
+                font-size: 32px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        0rel’s Mods
+    </h1>
+
+    <p>
+        0MH Admin Panel
+    </p>
+
+    <a
+        class="discord"
+        href="https://discord.gg/sAAFCSPSH"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        Discord Server
+    </a>
+
+</header>
+
+
+<div class="container">
+
+    <h2 class="section-title">
+        Manage Website
+    </h2>
+
+    <p class="section-description">
+        Select a category to manage posts.
+    </p>
+
+
+    <div class="buttons">
+
+        <button
+            class="category-button"
+            onclick="openCategory('libs')"
+        >
+            libs
+        </button>
+
+
+        <button
+            class="category-button"
+            onclick="openCategory('apk’s')"
+        >
+            apk’s
+        </button>
+
+
+        <button
+            class="category-button"
+            onclick="openCategory('Metadata’s')"
+        >
+            Metadata’s
+        </button>
+
+
+        <button
+            class="category-button"
+            onclick="openCategory('Rooting')"
+        >
+            Rooting
+        </button>
+
+
+        <button
+            class="category-button"
+            onclick="openCategory('Frida mods')"
+        >
+            Frida mods
+        </button>
+
+
+        <button
+            class="category-button"
+            onclick="openCategory('Root mods')"
+        >
+            Root mods
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- CREATE POST BUTTON -->
+
+<button
+    class="create-button"
+    onclick="openCreatePost()"
+    title="Create Post"
+>
+    +
+</button>
+
+
+<!-- CREATE POST MODAL -->
+
+<div
+    id="postModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <h2>
+            Create Post
+        </h2>
+
+
+        <label for="category">
+            Category
+        </label>
+
+        <select id="category">
+
+            <option value="0rel’s Mods">
+                0rel’s Mods
+            </option>
+
+            <option value="libs">
+                libs
+            </option>
+
+            <option value="apk’s">
+                apk’s
+            </option>
+
+            <option value="Metadata’s">
+                Metadata’s
+            </option>
+
+            <option value="Rooting">
+                Rooting
+            </option>
+
+            <option value="Frida mods">
+                Frida mods
+            </option>
+
+            <option value="Root mods">
+                Root mods
+            </option>
+
+        </select>
+
+
+        <label for="title">
+            Title
+        </label>
+
+        <input
+            id="title"
+            type="text"
+            placeholder="Post title..."
+        >
+
+
+        <label for="text">
+            Text
+        </label>
+
+        <textarea
+            id="text"
+            placeholder="Write your post..."
+        ></textarea>
+
+
+        <label>
+            Files and Photos
+        </label>
+
+
+        <div class="file-upload">
+
+            <input
+                id="files"
+                type="file"
+                multiple
+                hidden
+                onchange="updateFileNames()"
+            >
+
+
+            <button
+                type="button"
+                onclick="
+                    document
+                        .getElementById('files')
+                        .click()
+                "
+            >
+                Choose Files
+            </button>
+
+
+            <div id="fileNames">
+                No files selected
+            </div>
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="close-button"
+                onclick="closeCreatePost()"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                class="post-button"
+                onclick="createPost()"
+            >
+                Post
+            </button>
+
+        </div>
+
+
+        <div
+            id="status"
+            class="status"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let selectedCategory = "";
+
+
+// ================================
+// OPEN CATEGORY
+// ================================
+
+function openCategory(category) {
+
+    selectedCategory = category;
+
+    window.location.href =
+        "/category.html?category=" +
+        encodeURIComponent(category);
+}
+
+
+// ================================
+// OPEN CREATE POST
+// ================================
+
+function openCreatePost() {
+
+    document.getElementById(
+        "postModal"
+    ).style.display = "flex";
+
+}
+
+
+// ================================
+// CLOSE CREATE POST
+// ================================
+
+function closeCreatePost() {
+
+    document.getElementById(
+        "postModal"
+    ).style.display = "none";
+
+}
+
+
+// ================================
+// FILE NAMES
+// ================================
+
+function updateFileNames() {
+
+    const files =
+        document.getElementById(
+            "files"
+        ).files;
+
+    const fileNames =
+        document.getElementById(
+            "fileNames"
+        );
+
+
+    if (files.length === 0) {
+
+        fileNames.textContent =
+            "No files selected";
+
+        return;
+    }
+
+
+    if (files.length === 1) {
+
+        fileNames.textContent =
+            files[0].name;
+
+        return;
+    }
+
+
+    fileNames.textContent =
+        files.length +
+        " files selected";
+}
+
+
+// ================================
+// CREATE POST
+// ================================
+
+async function createPost() {
+
+    const category =
+        document.getElementById(
+            "category"
+        ).value;
+
+
+    const title =
+        document.getElementById(
+            "title"
+        ).value.trim();
+
+
+    const text =
+        document.getElementById(
+            "text"
+        ).value.trim();
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    if (!title) {
+
+        status.textContent =
+            "Please enter a title.";
+
+        return;
+    }
+
+
+    if (!text) {
+
+        status.textContent =
+            "Please enter some text.";
+
+        return;
+    }
+
+
+    status.textContent =
+        "Creating post...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/posts",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            category:
+                                category,
+
+                            title:
+                                title,
+
+                            text:
+                                text
+
+                        })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            status.textContent =
+                data.message ||
+                "Failed to create post.";
+
+            return;
+        }
+
+
+        status.textContent =
+            "Post created successfully!";
+
+
+        document.getElementById(
+            "title"
+        ).value = "";
+
+
+        document.getElementById(
+            "text"
+        ).value = "";
+
+
+        document.getElementById(
+            "files"
+        ).value = "";
+
+
+        document.getElementById(
+            "fileNames"
+        ).textContent =
+            "No files selected";
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Server connection error.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

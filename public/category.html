@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>0MH Category</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+        }
+
+        header {
+            padding: 25px;
+            background: #111;
+            border-bottom: 1px solid #222;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .back-button {
+            padding: 12px 18px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #151515;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .back-button:hover {
+            background: #242424;
+        }
+
+        .post {
+            margin-top: 25px;
+            padding: 22px;
+            background: #151515;
+            border: 1px solid #292929;
+            border-radius: 14px;
+        }
+
+        .post h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .post-text {
+            color: #ddd;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .post-info {
+            margin-top: 18px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .delete-button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #333;
+        }
+
+        .empty {
+            margin-top: 30px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .error {
+            margin-top: 30px;
+            color: #ff7777;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1 id="categoryTitle">Category</h1>
+</header>
+
+<div class="container">
+
+    <button
+        class="back-button"
+        onclick="goBack()"
+    >
+        Back
+    </button>
+
+    <div id="posts"></div>
+
+</div>
+
+
+<script>
+
+let currentUser = null;
+let currentCategory = "";
+
+
+// ================================
+// GO BACK
+// ================================
+
+function goBack() {
+
+    window.location.href = "/admin";
+
+}
+
+
+// ================================
+// LOAD CURRENT USER
+// ================================
+
+async function loadUser() {
+
+    try {
+
+        const response =
+            await fetch("/api/me");
+
+        const data =
+            await response.json();
+
+        if (data.loggedIn) {
+
+            currentUser =
+                data.user;
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load user:",
+            error
+        );
+
+    }
+
+}
+
+
+// ================================
+// LOAD POSTS
+// ================================
+
+async function loadPosts() {
+
+    const postsContainer =
+        document.getElementById("posts");
+
+
+    try {
+
+        const response =
+            await fetch("/api/posts");
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            postsContainer.innerHTML =
+                '<div class="error">Failed to load posts.</div>';
+
+            return;
+        }
+
+
+        const categoryPosts =
+            data.posts.filter(
+                post =>
+                    post.category ===
+                    currentCategory
+            );
+
+
+        if (categoryPosts.length === 0) {
+
+            postsContainer.innerHTML =
+                '<div class="empty">No posts in this category yet.</div>';
+
+            return;
+        }
+
+
+        postsContainer.innerHTML = "";
+
+
+        categoryPosts.forEach(post => {
+
+            const postElement =
+                document.createElement("div");
+
+            postElement.className =
+                "post";
+
+
+            // TITLE
+
+            const title =
+                document.createElement("h2");
+
+            title.textContent =
+                post.title;
+
+
+            // TEXT
+
+            const text =
+                document.createElement("div");
+
+            text.className =
+                "post-text";
+
+            text.textContent =
+                post.text;
+
+
+            // POST INFO
+
+            const info =
+                document.createElement("div");
+
+            info.className =
+                "post-info";
+
+            const date =
+                new Date(
+                    post.createdAt
+                ).toLocaleString();
+
+
+            info.textContent =
+                "Posted by " +
+                post.author +
+                " • " +
+                date;
+
+
+            postElement.appendChild(
+                title
+            );
+
+            postElement.appendChild(
+                text
+            );
+
+            postElement.appendChild(
+                info
+            );
+
+
+            // DELETE BUTTON
+            // ONLY ADMIN / OWNER
+
+            if (
+                currentUser &&
+                (
+                    currentUser.role === "admin" ||
+                    currentUser.role === "owner"
+                )
+            ) {
+
+                const deleteButton =
+                    document.createElement("button");
+
+
+                deleteButton.className =
+                    "delete-button";
+
+
+                deleteButton.textContent =
+                    "Delete Post";
+
+
+                deleteButton.onclick =
+                    function() {
+
+                        deletePost(
+                            post.id
+                        );
+
+                    };
+
+
+                postElement.appendChild(
+                    deleteButton
+                );
+
+            }
+
+
+            postsContainer.appendChild(
+                postElement
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load posts:",
+            error
+        );
+
+
+        postsContainer.innerHTML =
+            '<div class="error">Server connection error.</div>';
+
+    }
+
+}
+
+
+// ================================
+// DELETE POST
+// ================================
+
+async function deletePost(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this post?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/posts/" + id,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Failed to delete post."
+            );
+
+            return;
+        }
+
+
+        await loadPosts();
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete error:",
+            error
+        );
+
+
+        alert(
+            "Server connection error."
+        );
+
+    }
+
+}
+
+
+// ================================
+// START
+// ================================
+
+async function start() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    currentCategory =
+        params.get("category") || "";
+
+
+    if (!currentCategory) {
+
+        document.getElementById(
+            "categoryTitle"
+        ).textContent =
+            "Category";
+
+
+        document.getElementById(
+            "posts"
+        ).innerHTML =
+            '<div class="empty">No category selected.</div>';
+
+
+        return;
+    }
+
+
+    document.getElementById(
+        "categoryTitle"
+    ).textContent =
+        currentCategory;
+
+
+    await loadUser();
+
+    await loadPosts();
+
+}
+
+
+start();
+
+</script>
+
+</body>
+</html>

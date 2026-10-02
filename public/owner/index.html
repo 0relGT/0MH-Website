@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Owner Powers</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #061d5c 0%,
+                    #020817 45%,
+                    #00030a 100%
+                );
+        }
+
+        .container {
+            width: min(900px, 92%);
+            margin: auto;
+
+            padding: 40px 0 60px;
+        }
+
+        .panel {
+            padding: 30px;
+
+            border: 1px solid #087cff;
+            border-radius: 20px;
+
+            background:
+                rgba(0, 10, 35, 0.85);
+
+            box-shadow:
+                0 0 15px #006eff,
+                0 0 45px rgba(0, 110, 255, 0.4),
+                inset 0 0 25px rgba(0, 110, 255, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+
+            text-align: center;
+
+            font-size: 42px;
+
+            text-shadow:
+                0 0 10px #008cff,
+                0 0 25px #006eff,
+                0 0 45px #0055ff;
+        }
+
+        h2 {
+            color: #8ecbff;
+
+            text-shadow:
+                0 0 10px #0077ff;
+        }
+
+        .section {
+            margin-top: 25px;
+            padding: 20px;
+
+            border: 1px solid #087cff;
+            border-radius: 15px;
+
+            background:
+                rgba(0, 15, 45, 0.7);
+
+            box-shadow:
+                0 0 12px rgba(0, 110, 255, 0.5);
+        }
+
+        input {
+            width: 100%;
+
+            padding: 13px;
+
+            margin-top: 10px;
+
+            border: 1px solid #087cff;
+            border-radius: 10px;
+
+            outline: none;
+
+            background: #020817;
+            color: white;
+
+            box-shadow:
+                0 0 8px rgba(0, 110, 255, 0.5);
+        }
+
+        button {
+            margin-top: 12px;
+
+            padding: 11px 18px;
+
+            border: 1px solid #087cff;
+            border-radius: 9px;
+
+            background: #005eff;
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px #006eff;
+        }
+
+        button:hover {
+            background: #087cff;
+
+            box-shadow:
+                0 0 18px #008cff;
+        }
+
+        .users {
+            margin-top: 15px;
+        }
+
+        .user {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 10px;
+            padding: 13px;
+
+            border: 1px solid #075fc2;
+            border-radius: 10px;
+
+            background:
+                rgba(0, 10, 35, 0.8);
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .status {
+            color: #72bfff;
+
+            font-size: 13px;
+        }
+
+        #message {
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #72bfff;
+
+            font-weight: bold;
+
+            text-shadow:
+                0 0 10px #0077ff;
+        }
+
+        .back {
+            display: block;
+
+            margin-top: 25px;
+
+            text-align: center;
+
+            color: #72bfff;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .back:hover {
+            color: white;
+
+            text-shadow:
+                0 0 10px #008cff;
+        }
+
+        @media (max-width: 600px) {
+
+            .user {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="panel">
+
+        <h1>
+            👑 Owner Powers
+        </h1>
+
+
+        <div class="section">
+
+            <h2>
+                Ban
+            </h2>
+
+            <input
+                id="ban-username"
+                type="text"
+                placeholder="Find people or type a username"
+            >
+
+            <button onclick="banUser()">
+                Ban
+            </button>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>
+                Unban
+            </h2>
+
+            <input
+                id="unban-username"
+                type="text"
+                placeholder="Find people or type a username"
+            >
+
+            <button onclick="unbanUser()">
+                Unban
+            </button>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>
+                Admin Role
+            </h2>
+
+            <input
+                id="admin-username"
+                type="text"
+                placeholder="Find people or type a username"
+                oninput="updateAdminButton()"
+            >
+
+            <button
+                id="admin-button"
+                onclick="changeAdminRole()"
+            >
+                Find User
+            </button>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>
+                Users
+            </h2>
+
+            <input
+                id="search-users"
+                type="text"
+                placeholder="Find people..."
+                oninput="displayUsers()"
+            >
+
+            <div
+                id="users"
+                class="users"
+            >
+                Loading users...
+            </div>
+
+        </div>
+
+
+        <div id="message"></div>
+
+
+        <a
+            class="back"
+            href="/"
+        >
+            ← Back to 0MH Website
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let users = [];
+
+
+// ========================================
+// LOAD USERS
+// ========================================
+
+async function loadUsers() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/owner/users"
+            );
+
+        if (response.status === 403) {
+
+            document.body.innerHTML = `
+                <div style="
+                    color:white;
+                    font-family:Arial;
+                    text-align:center;
+                    margin-top:20vh;
+                ">
+                    <h1>You are not the Owner.</h1>
+
+                    <a
+                        href="/"
+                        style="color:#72bfff;"
+                    >
+                        Back to website
+                    </a>
+                </div>
+            `;
+
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+            return;
+        }
+
+        users =
+            data.users;
+
+        displayUsers();
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+// ========================================
+// DISPLAY USERS
+// ========================================
+
+function displayUsers() {
+
+    const search =
+        document
+            .getElementById(
+                "search-users"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+    const container =
+        document.getElementById(
+            "users"
+        );
+
+    const filtered =
+        users.filter(
+            user =>
+                user.username
+                    .toLowerCase()
+                    .includes(search)
+        );
+
+    if (!filtered.length) {
+
+        container.innerHTML = `
+            <div class="status">
+                No users found.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        filtered
+            .map(
+                user => `
+
+                    <div class="user">
+
+                        <div>
+
+                            <div class="user-name">
+                                ${escapeHTML(
+                                    user.username
+                                )}
+                            </div>
+
+                            <div class="status">
+                                Role:
+                                ${escapeHTML(
+                                    user.role
+                                )}
+
+                                •
+
+                                ${
+                                    user.banned
+                                        ? "Banned"
+                                        : "Not banned"
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `
+            )
+            .join("");
+}
+
+
+// ========================================
+// BAN
+// ========================================
+
+async function banUser() {
+
+    const username =
+        document
+            .getElementById(
+                "ban-username"
+            )
+            .value
+            .trim();
+
+    if (!username) {
+
+        showMessage(
+            "Enter a username."
+        );
+
+        return;
+    }
+
+    const response =
+        await fetch(
+            "/api/owner/ban",
+            {
+                method:
+                    "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        username:
+                            username
+                    })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    showMessage(
+        data.message ||
+        "Something went wrong."
+    );
+
+    if (data.success) {
+
+        document
+            .getElementById(
+                "ban-username"
+            )
+            .value = "";
+
+        loadUsers();
+    }
+}
+
+
+// ========================================
+// UNBAN
+// ========================================
+
+async function unbanUser() {
+
+    const username =
+        document
+            .getElementById(
+                "unban-username"
+            )
+            .value
+            .trim();
+
+    if (!username) {
+
+        showMessage(
+            "Enter a username."
+        );
+
+        return;
+    }
+
+    const response =
+        await fetch(
+            "/api/owner/unban",
+            {
+                method:
+                    "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        username:
+                            username
+                    })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    showMessage(
+        data.message ||
+        "Something went wrong."
+    );
+
+    if (data.success) {
+
+        document
+            .getElementById(
+                "unban-username"
+            )
+            .value = "";
+
+        loadUsers();
+    }
+}
+
+
+// ========================================
+// UPDATE ADMIN BUTTON
+// ========================================
+
+function updateAdminButton() {
+
+    const username =
+        document
+            .getElementById(
+                "admin-username"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+    const button =
+        document.getElementById(
+            "admin-button"
+        );
+
+    const user =
+        users.find(
+            item =>
+                item.username
+                    .toLowerCase() ===
+                username
+        );
+
+    if (!user) {
+
+        button.textContent =
+            "Find User";
+
+        return;
+    }
+
+    if (user.role === "admin") {
+
+        button.textContent =
+            "Cancel Admin";
+
+    } else if (
+        user.role === "owner"
+    ) {
+
+        button.textContent =
+            "Owner";
+
+    } else {
+
+        button.textContent =
+            "Give Admin";
+    }
+}
+
+
+// ========================================
+// GIVE / CANCEL ADMIN
+// ========================================
+
+async function changeAdminRole() {
+
+    const username =
+        document
+            .getElementById(
+                "admin-username"
+            )
+            .value
+            .trim();
+
+    if (!username) {
+
+        showMessage(
+            "Enter a username."
+        );
+
+        return;
+    }
+
+    const user =
+        users.find(
+            item =>
+                item.username
+                    .toLowerCase() ===
+                username.toLowerCase()
+        );
+
+    if (!user) {
+
+        showMessage(
+            "User not found."
+        );
+
+        return;
+    }
+
+    if (user.role === "owner") {
+
+        showMessage(
+            "The Owner cannot have their role changed."
+        );
+
+        return;
+    }
+
+    const response =
+        await fetch(
+            "/api/owner/admin-role",
+            {
+                method:
+                    "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        username:
+                            username
+                    })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    showMessage(
+        data.message ||
+        "Something went wrong."
+    );
+
+    if (data.success) {
+
+        loadUsers();
+
+        updateAdminButton();
+    }
+}
+
+
+// ========================================
+// MESSAGE
+// ========================================
+
+function showMessage(
+    message
+) {
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        message;
+}
+
+
+// ========================================
+// ESCAPE HTML
+// ========================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+
+// ========================================
+// START
+// ========================================
+
+loadUsers();
+
+</script>
+
+</body>
+
+</html>

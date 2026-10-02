@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Owner & Admin Powers</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at top,
+                    #071b45 0%,
+                    #02030a 45%,
+                    #000 100%
+                );
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: min(900px, 92%);
+            margin: 50px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00aaff;
+            text-shadow:
+                0 0 8px #008cff,
+                0 0 20px #008cff,
+                0 0 40px #0066ff;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            padding: 10px 18px;
+            color: white;
+            text-decoration: none;
+            border: 1px solid #008cff;
+            border-radius: 8px;
+            box-shadow: 0 0 12px #006cff;
+        }
+
+        .back:hover {
+            background: #006cff;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #008cff;
+            background: #020817;
+            color: white;
+            outline: none;
+            font-size: 16px;
+            box-shadow: 0 0 15px #0055ff;
+        }
+
+        .users {
+            margin-top: 20px;
+        }
+
+        .user {
+            padding: 18px;
+            margin-bottom: 15px;
+            background: rgba(0, 15, 40, 0.95);
+            border: 1px solid #007bff;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #004cff;
+            transition: 0.2s;
+        }
+
+        .user:hover {
+            box-shadow:
+                0 0 10px #008cff,
+                0 0 25px #0055ff;
+            transform: translateY(-1px);
+        }
+
+        .username {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .role {
+            margin-top: 6px;
+            color: #66cfff;
+        }
+
+        .actions {
+            display: none;
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 1px solid #005cff;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: 1px solid #008cff;
+            border-radius: 8px;
+            background: #031331;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 0 10px #005cff;
+        }
+
+        button:hover {
+            background: #006cff;
+            box-shadow:
+                0 0 10px #008cff,
+                0 0 20px #006cff;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .danger {
+            border-color: #ff3333;
+            box-shadow: 0 0 10px #ff2222;
+        }
+
+        .danger:hover {
+            background: #cc1111;
+            box-shadow:
+                0 0 10px #ff2222,
+                0 0 20px #ff0000;
+        }
+
+        .success {
+            border-color: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .success:hover {
+            background: #008844;
+        }
+
+        .admin {
+            border-color: #00aaff;
+            box-shadow: 0 0 10px #008cff;
+        }
+
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            color: #00aaff;
+            min-height: 25px;
+        }
+
+        .empty {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+        }
+
+        .staff-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #66cfff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a class="back" href="/">
+        ← Back to Website
+    </a>
+
+    <h1>Owner & Admin Powers</h1>
+
+    <div id="staffInfo" class="staff-info">
+        Checking staff...
+    </div>
+
+    <input
+        id="search"
+        class="search-box"
+        type="text"
+        placeholder="Search username..."
+        autocomplete="off"
+    >
+
+    <div id="users" class="users"></div>
+
+    <div id="message" class="message"></div>
+
+</div>
+
+<script>
+
+let allUsers = [];
+let currentUser = null;
+
+const search =
+    document.getElementById("search");
+
+const usersContainer =
+    document.getElementById("users");
+
+const message =
+    document.getElementById("message");
+
+const staffInfo =
+    document.getElementById("staffInfo");
+
+// ========================================
+// CHECK STAFF
+// ========================================
+
+async function checkStaff() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/me",
+                {
+                    credentials: "include"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        console.log("ME:", data);
+
+        if (
+            !data.loggedIn ||
+            !data.user
+        ) {
+
+            showNotStaff();
+            return;
+        }
+
+        const role =
+            String(
+                data.user.role || ""
+            ).toLowerCase();
+
+        if (
+            role !== "owner" &&
+            role !== "admin"
+        ) {
+
+            showNotStaff();
+            return;
+        }
+
+        currentUser =
+            data.user;
+
+        staffInfo.textContent =
+            `${currentUser.username} • Role: ${currentUser.role}`;
+
+        await loadUsers();
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "Failed to connect to server.";
+    }
+}
+
+// ========================================
+// NOT STAFF
+// ========================================
+
+function showNotStaff() {
+
+    document.body.innerHTML = `
+        <div style="
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#000;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+            padding:20px;
+        ">
+            <div>
+
+                <h1 style="
+                    color:#00aaff;
+                    text-shadow:0 0 20px #008cff;
+                ">
+                    You are not a staff (Owner or Admin).
+                </h1>
+
+                <a href="/" style="
+                    display:inline-block;
+                    margin-top:20px;
+                    padding:12px 20px;
+                    color:white;
+                    text-decoration:none;
+                    border:1px solid #008cff;
+                    border-radius:8px;
+                    box-shadow:0 0 15px #008cff;
+                ">
+                    Back to Website
+                </a>
+
+            </div>
+        </div>
+    `;
+}
+
+// ========================================
+// LOAD USERS
+// ========================================
+
+async function loadUsers() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/staff/users",
+                {
+                    credentials: "include"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        console.log("USERS:", data);
+
+        if (!response.ok || !data.success) {
+
+            message.textContent =
+                data.message ||
+                "Failed to load users.";
+
+            return;
+        }
+
+        allUsers =
+            data.users || [];
+
+        renderUsers(allUsers);
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "Failed to load users.";
+    }
+}
+
+// ========================================
+// RENDER USERS
+// ========================================
+
+function renderUsers(users) {
+
+    usersContainer.innerHTML = "";
+
+    if (!users.length) {
+
+        usersContainer.innerHTML = `
+            <div class="empty">
+                No users found.
+            </div>
+        `;
+
+        return;
+    }
+
+    users.forEach(user => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "user";
+
+        div.innerHTML = `
+            <div class="username">
+                ${escapeHTML(user.username)}
+            </div>
+
+            <div class="role">
+                Role:
+                ${escapeHTML(user.role || "user")}
+
+                ${
+                    user.banned
+                        ? " • BANNED"
+                        : ""
+                }
+            </div>
+
+            <div
+                class="actions"
+                data-user-id="${escapeHTML(user.id)}"
+            ></div>
+        `;
+
+        div.addEventListener(
+            "click",
+            function () {
+
+                showActions(
+                    user,
+                    div
+                );
+
+            }
+        );
+
+        usersContainer.appendChild(div);
+
+    });
+}
+
+// ========================================
+// SHOW ACTIONS
+// ========================================
+
+function showActions(
+    user,
+    userElement
+) {
+
+    // Hide all other action boxes
+    document
+        .querySelectorAll(".actions")
+        .forEach(actions => {
+
+            actions.style.display =
+                "none";
+
+        });
+
+    const actions =
+        userElement.querySelector(
+            ".actions"
+        );
+
+    actions.innerHTML = "";
+
+    actions.style.display =
+        "flex";
+
+    // ====================================
+    // OWNER
+    // ====================================
+
+    if (
+        String(user.role).toLowerCase() ===
+        "owner"
+    ) {
+
+        const ownerButton =
+            document.createElement("button");
+
+        ownerButton.textContent =
+            "OWNER";
+
+        ownerButton.disabled = true;
+
+        actions.appendChild(
+            ownerButton
+        );
+
+        return;
+    }
+
+    // ====================================
+    // BAN / UNBAN
+    // ====================================
+
+    const banButton =
+        document.createElement("button");
+
+    if (user.banned) {
+
+        banButton.textContent =
+            "Unban";
+
+        banButton.className =
+            "success";
+
+        banButton.onclick =
+            function(event) {
+
+                event.stopPropagation();
+
+                unbanUser(
+                    user.username
+                );
+
+            };
+
+    } else {
+
+        banButton.textContent =
+            "Ban";
+
+        banButton.className =
+            "danger";
+
+        banButton.onclick =
+            function(event) {
+
+                event.stopPropagation();
+
+                banUser(
+                    user.username
+                );
+
+            };
+    }
+
+    actions.appendChild(
+        banButton
+    );
+
+    // ====================================
+    // GIVE / CANCEL ADMIN
+    // OWNER ONLY
+    // ====================================
+
+    if (
+        currentUser &&
+        String(currentUser.role).toLowerCase() ===
+            "owner"
+    ) {
+
+        const adminButton =
+            document.createElement("button");
+
+        adminButton.className =
+            "admin";
+
+        if (
+            String(user.role).toLowerCase() ===
+            "admin"
+        ) {
+
+            adminButton.textContent =
+                "Cancel Admin";
+
+            adminButton.className =
+                "danger";
+
+        } else {
+
+            adminButton.textContent =
+                "Give Admin";
+
+            adminButton.className =
+                "success";
+        }
+
+        adminButton.onclick =
+            function(event) {
+
+                event.stopPropagation();
+
+                toggleAdmin(
+                    user.username
+                );
+
+            };
+
+        actions.appendChild(
+            adminButton
+        );
+    }
+}
+
+// ========================================
+// BAN
+// ========================================
+
+async function banUser(username) {
+
+    await staffAction(
+        "/api/staff/ban",
+        username
+    );
+}
+
+// ========================================
+// UNBAN
+// ========================================
+
+async function unbanUser(username) {
+
+    await staffAction(
+        "/api/staff/unban",
+        username
+    );
+}
+
+// ========================================
+// GIVE / CANCEL ADMIN
+// ========================================
+
+async function toggleAdmin(username) {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/staff/admin-role",
+                {
+                    method: "POST",
+
+                    credentials: "include",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            username:
+                                username
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        message.textContent =
+            data.message ||
+            "Done.";
+
+        await loadUsers();
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "Request failed.";
+    }
+}
+
+// ========================================
+// STAFF ACTION
+// ========================================
+
+async function staffAction(
+    url,
+    username
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "POST",
+
+                    credentials: "include",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            username:
+                                username
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        message.textContent =
+            data.message ||
+            "Done.";
+
+        await loadUsers();
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "Request failed.";
+    }
+}
+
+// ========================================
+// SEARCH
+// ========================================
+
+search.addEventListener(
+    "input",
+    function () {
+
+        const value =
+            search.value
+                .toLowerCase()
+                .trim();
+
+        if (!value) {
+
+            renderUsers(
+                allUsers
+            );
+
+            return;
+        }
+
+        const filtered =
+            allUsers.filter(
+                user =>
+                    user.username
+                        .toLowerCase()
+                        .includes(value)
+            );
+
+        renderUsers(
+            filtered
+        );
+    }
+);
+
+// ========================================
+// ESCAPE HTML
+// ========================================
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// ========================================
+// START
+// ========================================
+
+checkStaff();
+
+</script>
+
+</body>
+</html>

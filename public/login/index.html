@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0MH Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .box {
+            width: 320px;
+            background: #151515;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 12px;
+            background: #222;
+            color: white;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h1>0MH Login</h1>
+
+    <input id="username" type="text" placeholder="Username">
+
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <button onclick="register()">Create Account</button>
+
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+async function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if (!username || !password) {
+        message.textContent = "Please enter your username and password.";
+        return;
+    }
+
+    const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username,
+            password
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        message.textContent = "Login successful!";
+        window.location.href = "/";
+    } else {
+        message.textContent = data.message;
+    }
+}
+
+async function register() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if (!username || !password) {
+        message.textContent = "Please enter a username and password.";
+        return;
+    }
+
+    const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username,
+            password
+        })
+    });
+
+    const data = await response.json();
+
+    message.textContent = data.message;
+}
+</script>
+
+</body>
+</html>
