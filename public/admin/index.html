@@ -63,10 +63,6 @@
             background-size: 35px 35px;
         }
 
-        /* =========================
-           HEADER
-        ========================= */
-
         header {
             position: sticky;
             top: 0;
@@ -108,10 +104,6 @@
                 0 0 8px #0077ff;
         }
 
-        /* =========================
-           MAIN
-        ========================= */
-
         .container {
             width: min(1200px, 92%);
 
@@ -137,10 +129,6 @@
 
             color: #79c8ff;
         }
-
-        /* =========================
-           CATEGORY BUTTONS
-        ========================= */
 
         .buttons {
             display: grid;
@@ -219,10 +207,6 @@
                 scale(0.98);
         }
 
-        /* =========================
-           CREATE BUTTON
-        ========================= */
-
         .create-button {
             position: fixed;
 
@@ -277,10 +261,6 @@
                 0 0 70px
                 rgba(0, 140, 255, 0.8);
         }
-
-        /* =========================
-           MODAL
-        ========================= */
 
         .modal {
             display: none;
@@ -342,10 +322,6 @@
                 0 0 8px #00aaff,
                 0 0 20px #006eff;
         }
-
-        /* =========================
-           FORMS
-        ========================= */
 
         label {
             display: block;
@@ -412,10 +388,6 @@
             color: #ffffff;
         }
 
-        /* =========================
-           FILES
-        ========================= */
-
         .file-upload {
             display: flex;
 
@@ -460,10 +432,6 @@
 
             font-size: 14px;
         }
-
-        /* =========================
-           MODAL BUTTONS
-        ========================= */
 
         .modal-buttons {
             display: flex;
@@ -526,10 +494,6 @@
                 0 0 12px #006eff;
         }
 
-        /* =========================
-           STATUS
-        ========================= */
-
         .status {
             margin-top: 15px;
 
@@ -538,10 +502,6 @@
             text-shadow:
                 0 0 7px #006eff;
         }
-
-        /* =========================
-           DISCORD
-        ========================= */
 
         .discord {
             display: inline-block;
@@ -575,10 +535,6 @@
             box-shadow:
                 0 0 18px #0077ff;
         }
-
-        /* =========================
-           MOBILE
-        ========================= */
 
         @media (max-width: 600px) {
 
@@ -663,14 +619,12 @@
             libs
         </button>
 
-
         <button
             class="category-button"
             onclick="openCategory('apk’s')"
         >
             apk’s
         </button>
-
 
         <button
             class="category-button"
@@ -679,7 +633,6 @@
             Metadata’s
         </button>
 
-
         <button
             class="category-button"
             onclick="openCategory('Rooting')"
@@ -687,14 +640,12 @@
             Rooting
         </button>
 
-
         <button
             class="category-button"
             onclick="openCategory('Frida mods')"
         >
             Frida mods
         </button>
-
 
         <button
             class="category-button"
@@ -708,8 +659,6 @@
 </div>
 
 
-<!-- CREATE POST BUTTON -->
-
 <button
     class="create-button"
     onclick="openCreatePost()"
@@ -718,8 +667,6 @@
     +
 </button>
 
-
-<!-- CREATE POST MODAL -->
 
 <div
     id="postModal"
@@ -806,7 +753,6 @@
                 onchange="updateFileNames()"
             >
 
-
             <button
                 type="button"
                 onclick="
@@ -817,7 +763,6 @@
             >
                 Choose Files
             </button>
-
 
             <div id="fileNames">
                 No files selected
@@ -835,8 +780,8 @@
                 Cancel
             </button>
 
-
             <button
+                id="postButton"
                 class="post-button"
                 onclick="createPost()"
             >
@@ -861,10 +806,6 @@
 let selectedCategory = "";
 
 
-// ================================
-// OPEN CATEGORY
-// ================================
-
 function openCategory(category) {
 
     selectedCategory = category;
@@ -875,22 +816,18 @@ function openCategory(category) {
 }
 
 
-// ================================
-// OPEN CREATE POST
-// ================================
-
 function openCreatePost() {
 
     document.getElementById(
         "postModal"
     ).style.display = "flex";
 
+    document.getElementById(
+        "status"
+    ).textContent = "";
+
 }
 
-
-// ================================
-// CLOSE CREATE POST
-// ================================
 
 function closeCreatePost() {
 
@@ -900,10 +837,6 @@ function closeCreatePost() {
 
 }
 
-
-// ================================
-// FILE NAMES
-// ================================
 
 function updateFileNames() {
 
@@ -942,16 +875,12 @@ function updateFileNames() {
 }
 
 
-// ================================
-// CREATE POST
-// ================================
-
 async function createPost() {
 
     const category =
         document.getElementById(
             "category"
-        ).value;
+        ).value.trim();
 
 
     const title =
@@ -966,10 +895,31 @@ async function createPost() {
         ).value.trim();
 
 
+    const files =
+        document.getElementById(
+            "files"
+        ).files;
+
+
     const status =
         document.getElementById(
             "status"
         );
+
+
+    const postButton =
+        document.getElementById(
+            "postButton"
+        );
+
+
+    if (!category) {
+
+        status.textContent =
+            "Please select a category.";
+
+        return;
+    }
 
 
     if (!title) {
@@ -994,41 +944,84 @@ async function createPost() {
         "Creating post...";
 
 
+    postButton.disabled = true;
+
+    postButton.style.opacity = "0.6";
+
+
     try {
+
+        /*
+         * The server uses multer and expects
+         * multipart/form-data.
+         */
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "category",
+            category
+        );
+
+
+        formData.append(
+            "title",
+            title
+        );
+
+
+        formData.append(
+            "text",
+            text
+        );
+
+
+        /*
+         * server.js currently uses
+         * upload.single("file"),
+         * so only the first selected file
+         * is sent.
+         */
+        if (files.length > 0) {
+
+            formData.append(
+                "file",
+                files[0]
+            );
+
+        }
+
 
         const response =
             await fetch(
                 "/api/posts",
                 {
                     method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            category:
-                                category,
-
-                            title:
-                                title,
-
-                            text:
-                                text
-
-                        })
+                    body: formData
                 }
             );
 
 
-        const data =
-            await response.json();
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch {
+
+            data = {
+                success: false,
+                message:
+                    "Server returned an invalid response."
+            };
+
+        }
 
 
-        if (!response.ok) {
+        if (!response.ok || !data.success) {
 
             status.textContent =
                 data.message ||
@@ -1062,12 +1055,35 @@ async function createPost() {
         ).textContent =
             "No files selected";
 
+
+        /*
+         * Automatically open the category
+         * where the new post was created.
+         */
+        setTimeout(() => {
+
+            window.location.href =
+                "/category.html?category=" +
+                encodeURIComponent(category);
+
+        }, 500);
+
+
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Create post error:",
+            error
+        );
 
         status.textContent =
             "Server connection error.";
+
+    } finally {
+
+        postButton.disabled = false;
+
+        postButton.style.opacity = "1";
 
     }
 
