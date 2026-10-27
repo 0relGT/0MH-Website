@@ -396,10 +396,6 @@
     let currentUser = null;
     let currentCategory = "all";
 
-    // ========================================
-    // STAFF CHECK
-    // ========================================
-
     function isStaffUser(user = currentUser) {
         if (!user) {
             return false;
@@ -419,10 +415,6 @@
             username === "0relgt"
         );
     }
-
-    // ========================================
-    // CHECK USER
-    // ========================================
 
     async function checkUser() {
         try {
@@ -516,10 +508,6 @@
         }
     }
 
-    // ========================================
-    // LOGIN
-    // ========================================
-
     async function login() {
         const username =
             document
@@ -539,7 +527,7 @@
 
         try {
             const response = await fetch(
-                "/auth/login",
+                "/api/login",
                 {
                     method: "POST",
 
@@ -591,10 +579,6 @@
         }
     }
 
-    // ========================================
-    // REGISTER
-    // ========================================
-
     async function register() {
         const username =
             document
@@ -614,7 +598,7 @@
 
         try {
             const response = await fetch(
-                "/auth/register",
+                "/api/register",
                 {
                     method: "POST",
 
@@ -669,10 +653,6 @@
         }
     }
 
-    // ========================================
-    // LOGOUT
-    // ========================================
-
     async function logout() {
         try {
             await fetch(
@@ -716,10 +696,6 @@
             .classList.add("hidden");
     }
 
-    // ========================================
-    // CATEGORY
-    // ========================================
-
     function selectCategory(category) {
         currentCategory = normalizeCategory(category);
 
@@ -735,20 +711,12 @@
         loadPosts();
     }
 
-    // ========================================
-    // NORMALIZE CATEGORY
-    // ========================================
-
     function normalizeCategory(category) {
         return String(category || "")
             .trim()
             .toLowerCase()
             .replace(/[’']/g, "'");
     }
-
-    // ========================================
-    // LOAD POSTS
-    // ========================================
 
     async function loadPosts() {
         const postsContainer =
@@ -787,10 +755,6 @@
                 "<p>Failed to load posts.</p>";
         }
     }
-
-    // ========================================
-    // DISPLAY POSTS
-    // ========================================
 
     function displayPosts(posts) {
         const container =
@@ -908,10 +872,6 @@
                 })
                 .join("");
     }
-
-    // ========================================
-    // CREATE POST
-    // ========================================
 
     async function createPost() {
         if (!isStaffUser()) {
@@ -1055,10 +1015,6 @@
         }
     }
 
-    // ========================================
-    // SELECT FILE
-    // ========================================
-
     function showSelectedFile() {
         const input =
             document.getElementById("postFile");
@@ -1077,10 +1033,6 @@
                 "No file selected";
         }
     }
-
-    // ========================================
-    // EDIT POST
-    // ========================================
 
     async function editPost(id) {
         if (!isStaffUser()) {
@@ -1157,10 +1109,6 @@
         }
     }
 
-    // ========================================
-    // DELETE POST
-    // ========================================
-
     async function deletePost(id) {
         if (!isStaffUser()) {
             return;
@@ -1211,17 +1159,9 @@
         }
     }
 
-    // ========================================
-    // STAFF
-    // ========================================
-
     function openStaff() {
         window.location.href = "/staff";
     }
-
-    // ========================================
-    // ESCAPE HTML
-    // ========================================
 
     function escapeHTML(value) {
         return String(value)
@@ -1231,10 +1171,6 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
-
-    // ========================================
-    // START
-    // ========================================
 
     checkUser();
 </script>
